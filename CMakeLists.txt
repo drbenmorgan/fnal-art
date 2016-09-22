@@ -1,3 +1,8 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+else()
+
 # ======================================================================
 #  art main build file
 #
@@ -88,3 +93,5 @@ add_subdirectory(Modules)
 
 # packaging utility
 include(UseCPack)
+
+endif() # ALT_CMAKE
