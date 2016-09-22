@@ -45,6 +45,8 @@ find_package(SQLite REQUIRED)
 #-----------------------------------------------------------------------
 # Core global build settings
 # - Everything uses "art/.." inc dirs
+# - NB: This *also* means rapidjson is #included automatically (could also
+#   use direct INTERFACE target if required
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_BINARY_DIR})
 
