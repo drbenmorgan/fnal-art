@@ -1,3 +1,8 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+else()
+
 art_make(
   SUBDIRS detail StateMachine
   LIB_LIBRARIES
@@ -14,3 +19,5 @@ art_make(
 
 install_headers(SUBDIRS detail StateMachine)
 install_source(SUBDIRS detail StateMachine)
+
+endif() # ALT_CMAKE
