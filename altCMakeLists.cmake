@@ -27,6 +27,7 @@ set(canvas_COMPILE_FEATURES
 
 # - Our our modules
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_CURRENT_LIST_DIR}/Modules)
+include(ArtPlugins)
 
 #-----------------------------------------------------------------------
 # Needed direct dependencies
@@ -60,7 +61,7 @@ include_directories(${PROJECT_BINARY_DIR})
 #add_subdirectory(tools)
 
 # source
-add_subdirectory (art)
+add_subdirectory(art)
 
 # ups - table and config files
 #add_subdirectory(ups)
