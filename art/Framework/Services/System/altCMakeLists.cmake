@@ -10,11 +10,19 @@ art_add_service(FloatingPointControl FloatingPointControl.h FloatingPointControl
 
 art_add_service(TriggerNamesService TriggerNamesService.h TriggerNamesService_service.cc)
 
+art_add_service(PathSelection PathSelection.h PathSelection_service.cc)
+art_service_link_libraries(PathSelection art_Framework_Core)
 
-#simple_plugin(PathSelection "service" art_Framework_Core)
-#simple_plugin(ScheduleContext "service" art_Framework_Core)
+art_add_service(ScheduleContext ScheduleContext.h ScheduleContext_service.cc)
+art_service_link_libraries(ScheduleContext art_Framework_Core)
 
-art_install_services(SERVICES CurrentModule FileCatalogMetadata FloatingPointControl TriggerNamesService
+art_install_services(SERVICES
+  CurrentModule
+  FileCatalogMetadata
+  FloatingPointControl
+  TriggerNamesService
+  PathSelection
+  ScheduleContext
   INSTALL
     EXPORT ${PROJECT_NAME}Targets
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
