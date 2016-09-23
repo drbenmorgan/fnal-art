@@ -44,8 +44,8 @@ art_service_link_libraries(RandomNumberGenerator
   CLHEP::CLHEP
   )
 
-# TODO (UserIntraction needs art_Core)
-#simple_plugin(SimpleInteraction "service" art_Framework_Services_UserInteraction)
+art_add_service(SimpleInteraction SimpleInteraction.h SimpleInteraction_service.cc)
+art_service_link_libraries(SimpleInteraction art_Framework_Services_UserInteraction)
 
 art_add_service(SimpleMemoryCheck SimpleMemoryCheck.h SimpleMemoryCheck_service.cc)
 art_service_link_libraries(SimpleMemoryCheck
@@ -109,6 +109,7 @@ art_install_services(SERVICES
   SimpleMemoryCheck
   MemoryAdjuster
   MemoryTracker
+  SimpleInteraction
   Timing
   TimeTracker
   Tracer
