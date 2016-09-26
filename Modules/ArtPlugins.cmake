@@ -136,7 +136,10 @@ function(art_add_source _name)
   # Review:
   # 1: link list - what does a source *by default* need to link to?
   # 2: Namespacing so clients of art can use this with correct target names
-  target_link_libraries(${_basename}_source PUBLIC art_Framework_IO_Sources)
+  target_link_libraries(${_basename}_source PUBLIC
+    art_Framework_IO_Sources
+    art_Framework_Core
+    )
 endfunction()
 
 #-----------------------------------------------------------------------
