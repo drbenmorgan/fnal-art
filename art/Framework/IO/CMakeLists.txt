@@ -1,3 +1,8 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+else()
+
 # project name
 project(art_Framework_IO)
 
@@ -17,3 +22,5 @@ add_subdirectory (ProductMix)
 add_subdirectory (Root)
 add_subdirectory (Sources)
 add_subdirectory (detail)
+
+endif() # ALT_CMAKE

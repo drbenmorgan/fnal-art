@@ -1,3 +1,8 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+else()
+
 art_make_library(
   LIBRARY_NAME art_Framework_IO_Root_detail_sources
   SOURCE
@@ -107,3 +112,5 @@ art_make_exec(NAME file_info_dumper
 
 install_headers()
 install_source()
+
+endif() # ALT_CMAKE
