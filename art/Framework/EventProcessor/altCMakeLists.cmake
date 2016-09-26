@@ -29,3 +29,18 @@ target_link_libraries(art_Framework_EventProcessor PUBLIC
   canvas::canvas_Utilities
   cetlib::cetlib
   )
+
+install(TARGETS art_Framework_EventProcessor
+  EXPORT ${PROJECT_NAME}Targets
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  COMPONENT Runtime
+  )
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/Framework/EventProcessor
+  COMPONENT Development
+  FILES_MATCHING PATTERN "*.h"
+  )
+
