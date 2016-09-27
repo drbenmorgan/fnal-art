@@ -43,6 +43,10 @@ add_library(art_Utilities SHARED ${art_UTILITIES_SOURCES})
 
 # - Only link direct(*) dependencies
 # (*) needs review, plus PRIVTAE/PUBLIC split
+# CLHEP is needed as an INTERFACE because the ParameterSet helper
+# part use the headers, and consequently the library. Because
+# currently supported CLHEP doesn't use usage requirements fully,
+# need both target_link_libs and target_include_dirs
 target_link_libraries(art_Utilities PUBLIC
   canvas::canvas_Utilities
   messagefacility::MF_MessageLogger
@@ -54,6 +58,11 @@ target_link_libraries(art_Utilities PUBLIC
   Boost::thread
   ${TBB_LIBRARIES}
   ${CMAKE_DL_LIBS}
+  INTERFACE
+   CLHEP::CLHEP
+  )
+target_include_directories(art_Utilities INTERFACE
+  ${CLHEP_INCLUDE_DIRS}
   )
 
 install(TARGETS art_Utilities
