@@ -1,4 +1,4 @@
-#add_subdirectory (Art)
+add_subdirectory (Art)
 add_subdirectory (Core)
 add_subdirectory (EventProcessor)
 add_subdirectory (IO)
