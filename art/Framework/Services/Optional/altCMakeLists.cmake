@@ -62,13 +62,15 @@ art_add_service(MemoryTracker MemoryTracker.h MemoryTracker_service.cc)
 art_service_link_libraries(MemoryTracker art_Framework_Services_Optional)
 
 # TODO (needs art_Framework_IO)
-#simple_plugin(TFileService "service"
-#  art_Framework_Services_System_TriggerNamesService_service
-#  art_Framework_Services_Optional
-#  art_Framework_IO
-#  art_Framework_Principal
-#  ${ROOT_RIO}
-#  ${ROOT_THREAD})
+art_add_service(TFileService TFileService.h TFileService_service.cc)
+art_service_link_libraries(TFileService
+  art_Framework_Services_System_TriggerNamesService_service
+  art_Framework_Services_Optional
+  art_Framework_IO
+  art_Framework_Principal
+  ${ROOT_RIO_LIBRARY}
+  ${ROOT_Thread_LIBRARY}
+  )
 
 art_add_service(Timing Timing_service.cc)
 art_service_link_libraries(Timing
@@ -110,6 +112,7 @@ art_install_services(SERVICES
   MemoryAdjuster
   MemoryTracker
   SimpleInteraction
+  TFileService
   Timing
   TimeTracker
   Tracer
