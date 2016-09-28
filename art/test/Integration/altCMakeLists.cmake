@@ -1,4 +1,4 @@
-cet_test_env("PATH=$<TARGET_FILE_DIR:art>:${CMAKE_CURRENT_SOURCE_DIR}:${cetbuildtools2_MODULE_PATH}:$ENV{PATH}")
+cet_test_env("PATH=$<TARGET_FILE_DIR:art>:${CMAKE_CURRENT_SOURCE_DIR}:${cetbuildtools2_MODULE_PATH}:${PROJECT_SOURCE_DIR}/tools:$ENV{PATH}")
 cet_test_env("LD_LIBRARY_PATH=$<TARGET_FILE_DIR:art_Framework_Art>:$ENV{LD_LIBRARY_PATH}")
 
 set(CMAKE_MODULE_PATH
