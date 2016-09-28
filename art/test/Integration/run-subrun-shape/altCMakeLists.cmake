@@ -1,9 +1,3 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
-
 #================================================================
 #
 # Product-shape testing (run and subrun products)
@@ -32,7 +26,7 @@ else()
 # In what follows, "Extra" means that extra products are produced/put
 # in the same process that reads the input files.
 
-simple_plugin(InputProducerNoEvents "module" NO_INSTALL)
+art_add_module(InputProducerNoEvents InputProducerNoEvents_module.cc)
 
 #================================================================
 # (1)      a.root  b.root  ----> FAIL
@@ -198,5 +192,3 @@ cet_test( SubsetRunSubrunShapes_02_r HANDBUILT
   DEPENDS SubsetRunSubrunShapes_w
   PASS_REGULAR_EXPRESSION "MismatchedInputFiles"
   )
-
-endif() # ALT_CMAKE

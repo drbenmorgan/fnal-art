@@ -1,3 +1,7 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+else()
 #
 # Make a shareable library containing the data class
 # implementation and the dictionary.
@@ -152,3 +156,4 @@ COMMAND
     ${CMAKE_CURRENT_SOURCE_DIR}/test_fastclone_fail_v10.fcl
 )
 
+endif() # ALT_CMAKE

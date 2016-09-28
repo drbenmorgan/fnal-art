@@ -1,3 +1,8 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+else()
+
 # cet_test macro
 set(default_art_test_libraries
   art_Utilities
@@ -36,3 +41,5 @@ cet_test(ScheduleID_t USE_BOOST_UNIT)
 
 cet_test(parent_path_t USE_BOOST_UNIT
   LIBRARIES art_Utilities canvas_Utilities)
+
+endif() # ALT_CMAKE

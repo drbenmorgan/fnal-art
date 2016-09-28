@@ -1,7 +1,5 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
+cet_test_env("PATH=$<TARGET_FILE_DIR:art>:${CMAKE_CURRENT_SOURCE_DIR}:${cetbuildtools2_MODULE_PATH}:$ENV{PATH}")
+cet_test_env("LD_LIBRARY_PATH=$<TARGET_FILE_DIR:art_Framework_Art>:$ENV{LD_LIBRARY_PATH}")
 
 set(CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
@@ -9,12 +7,11 @@ set(CMAKE_MODULE_PATH
   )
 
 # project name
-art_make_library(SOURCE
-  ToySource.cc
-  LIBRARIES art_Framework_IO_Sources
+add_library(art_test_Integration SHARED ToySource.cc)
+target_link_libraries(art_test_Integration PUBLIC
+  art_Framework_IO_Sources
   art_Framework_Core
-  fhiclcpp
-  NO_INSTALL
+  fhiclcpp::fhiclcpp
   )
 
 set_source_files_properties(MixFilterTestETS_module.cc
@@ -33,85 +30,155 @@ set_source_files_properties(MixFilterTestOldStartEvent_module.cc
   PROPERTIES COMPILE_DEFINITIONS ART_TEST_OLD_STARTEVENT
 )
 
-simple_plugin(AddIntsProducer             "module"  NO_INSTALL )
-simple_plugin(AssnsAnalyzer               "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(AssnsProducer               "module"  NO_INSTALL )
-simple_plugin(BareStringAnalyzer          "module"  NO_INSTALL )
-simple_plugin(BareStringProducer          "module"  NO_INSTALL )
-simple_plugin(CompressedIntProducer       "module"  NO_INSTALL )
-simple_plugin(CompressedIntTestAnalyzer   "module"  NO_INSTALL )
-simple_plugin(DeferredIsReadyWithAssnsAnalyzer "module"  NO_INSTALL )
-simple_plugin(DeferredIsReadyWithAssnsProducer "module"  NO_INSTALL )
-simple_plugin(DerivedPtrVectorProducer    "module"  NO_INSTALL )
-simple_plugin(DoubleProducer              "module"  NO_INSTALL )
-simple_plugin(DoubleTestAnalyzer          "module"  NO_INSTALL )
-simple_plugin(DropTestAnalyzer            "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(DropTestParentageFaker      "module"  NO_INSTALL )
-simple_plugin(FailingAnalyzer             "module"  NO_INSTALL )
-simple_plugin(FailingProducer             "module"  NO_INSTALL )
-simple_plugin(UnputtingProducer           "module"  NO_INSTALL )
-simple_plugin(FlushingGenerator           "source"  NO_INSTALL )
-simple_plugin(FlushingGeneratorTest       "module"  NO_INSTALL )
-simple_plugin(FlushingGeneratorTestFilter "module"  NO_INSTALL )
-simple_plugin(GeneratorTest               "source"  NO_INSTALL )
-simple_plugin(ImplicitRSAssignmentAnalyzer "module" NO_INSTALL USE_BOOST_UNIT)
-simple_plugin(ImplicitRSAssignmentProducer "module" NO_INSTALL USE_BOOST_UNIT)
-simple_plugin(InFlightConfiguration       "service" NO_INSTALL USE_BOOST_UNIT art_Framework_Services_Registry art_Framework_Services_UserInteraction art_Framework_Services_System_PathSelection_service )
-simple_plugin(IntProducer                 "module"  NO_INSTALL )
-simple_plugin(IntTestAnalyzer             "module"  NO_INSTALL )
-simple_plugin(IntVectorAnalyzer           "module"  NO_INSTALL )
-simple_plugin(IntVectorProducer           "module"  NO_INSTALL )
-simple_plugin(MixAnalyzer                 "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(MixFilterTest               "module"  NO_INSTALL USE_BOOST_UNIT art_Framework_IO_ProductMix )
-simple_plugin(MixFilterTestETS            "module"  NO_INSTALL USE_BOOST_UNIT art_Framework_IO_ProductMix )
-simple_plugin(MixFilterTestETSc           "module"  NO_INSTALL USE_BOOST_UNIT art_Framework_IO_ProductMix )
-simple_plugin(MixFilterTestNoStartEvent   "module"  NO_INSTALL USE_BOOST_UNIT art_Framework_IO_ProductMix )
-simple_plugin(MixFilterTestOldStartEvent  "module"  NO_INSTALL USE_BOOST_UNIT art_Framework_IO_ProductMix )
-simple_plugin(MixProducer                 "module"  NO_INSTALL )
-simple_plugin(MockClusterListAnalyzer     "module"  NO_INSTALL )
-simple_plugin(MockClusterListProducer     "module"  NO_INSTALL )
-simple_plugin(PausingAnalyzer             "module"  NO_INSTALL )
-simple_plugin(ProductIDGetter             "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(ProductIDGetterNoPut        "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(ProductIDGetterAnalyzer     "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(PtrListAnalyzer             "module"  NO_INSTALL )
-simple_plugin(PtrVectorSimpleAnalyzer     "module"  NO_INSTALL )
-simple_plugin(PtrmvAnalyzer               "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(PtrmvProducer               "module"  NO_INSTALL )
-simple_plugin(RandomNumberSaveTest        "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(Reconfigurable              "service" NO_INSTALL )
-simple_plugin(Reconfiguring               "module"  NO_INSTALL )
-simple_plugin(RunSubRunProductProducerNoPut "module"  NO_INSTALL )
-simple_plugin(SAMMetadataTest             "module"  NO_INSTALL art_Framework_Services_System_FileCatalogMetadata_service )
-simple_plugin(ServiceUsing                "service" NO_INSTALL )
-simple_plugin(SimpleDerivedAnalyzer       "module"  NO_INSTALL )
-simple_plugin(SimpleDerivedProducer       "module"  NO_INSTALL )
-simple_plugin(TH1DataProducer             "module"  NO_INSTALL art_test_TestObjects)
-simple_plugin(TestAnalyzerSelect          "module"  NO_INSTALL )
-simple_plugin(TestBitsOutput              "module"  NO_INSTALL )
-simple_plugin(TestFilter                  "module"  NO_INSTALL )
-simple_plugin(TestFilterSpecificEvents    "module"  NO_INSTALL )
-simple_plugin(TestOutput                  "module"  NO_INSTALL )
-simple_plugin(TestProvenanceDumper        "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(TestResultAnalyzer          "module"  NO_INSTALL )
-simple_plugin(TestServiceUsingService     "module"  NO_INSTALL USE_BOOST_UNIT )
-simple_plugin(TestSimpleMemoryCheckProducer "module"  NO_INSTALL )
-simple_plugin(TestTimeTrackerProducer     "module"  NO_INSTALL )
-simple_plugin(TestTimeTrackerFilter       "module"  NO_INSTALL )
-simple_plugin(TestTimeTrackerAnalyzer     "module"  NO_INSTALL )
-simple_plugin(Throwing                    "service" NO_INSTALL )
-simple_plugin(ToyProductAnalyzer          "module"  NO_INSTALL )
-simple_plugin(ToyProductProducer          "module"  NO_INSTALL )
-simple_plugin(ToyProductProducerMultiput  "module"  NO_INSTALL )
-simple_plugin(ToyRawFileInput             "source"  NO_INSTALL USE_BOOST_UNIT art_test_Integration )
-simple_plugin(ToyRawInput                 "source"  NO_INSTALL USE_BOOST_UNIT art_test_Integration )
-simple_plugin(ToyRawInputTester           "module"  NO_INSTALL )
-simple_plugin(ToyRawProductAnalyzer       "module"  NO_INSTALL )
-simple_plugin(U_S                         "module"  NO_INSTALL ALLOW_UNDERSCORES )
-simple_plugin(ValidHandleTester           "module"  NO_INSTALL )
-simple_plugin(Wanted                      "service" NO_INSTALL )
+art_add_module(AddIntsProducer AddIntsProducer_module.cc)
+art_add_module(AssnsAnalyzer AssnsAnalyzer_module.cc)
+set_boost_unit_properties(art_test_Integration_AssnsAnalyzer_module)
+art_add_module(AssnsProducer AssnsProducer_module.cc)
+art_add_module(BareStringAnalyzer BareStringAnalyzer_module.cc)
+art_add_module(BareStringProducer BareStringProducer_module.cc)
+art_add_module(CompressedIntProducer CompressedIntProducer_module.cc)
+art_add_module(CompressedIntTestAnalyzer CompressedIntTestAnalyzer_module.cc)
+art_add_module(DeferredIsReadyWithAssnsAnalyzer DeferredIsReadyWithAssnsAnalyzer_module.cc)
+art_add_module(DeferredIsReadyWithAssnsProducer DeferredIsReadyWithAssnsProducer_module.cc)
+art_add_module(DerivedPtrVectorProducer DerivedPtrVectorProducer_module.cc)
+art_add_module(DoubleProducer DoubleProducer_module.cc)
+art_add_module(DoubleTestAnalyzer DoubleTestAnalyzer_module.cc)
 
-art_dictionary(DICTIONARY_LIBRARIES cetlib NO_INSTALL)
+art_add_module(DropTestAnalyzer DropTestAnalyzer_module.cc)
+set_boost_unit_properties(art_test_Integration_DropTestAnalyzer_module)
+
+art_add_module(DropTestParentageFaker DropTestParentageFaker_module.cc)
+art_add_module(FailingAnalyzer FailingAnalyzer_module.cc)
+art_add_module(FailingProducer FailingProducer_module.cc)
+art_add_module(UnputtingProducer UnputtingProducer_module.cc)
+art_add_source(FlushingGenerator FlushingGenerator_source.cc)
+art_add_module(FlushingGeneratorTest FlushingGeneratorTest_module.cc)
+art_add_module(FlushingGeneratorTestFilter FlushingGeneratorTestFilter_module.cc)
+art_add_source(GeneratorTest GeneratorTest_source.cc)
+
+art_add_module(ImplicitRSAssignmentAnalyzer ImplicitRSAssignmentAnalyzer_module.cc)
+set_boost_unit_properties(art_test_Integration_ImplicitRSAssignmentAnalyzer_module)
+art_add_module(ImplicitRSAssignmentProducer ImplicitRSAssignmentProducer_module.cc)
+set_boost_unit_properties(art_test_Integration_ImplicitRSAssignmentProducer_module)
+
+art_add_service(InFlightConfiguration InFlightConfiguration_service.cc)
+set_boost_unit_properties(art_test_Integration_InFlightConfiguration_service)
+art_service_link_libraries(InFlightConfiguration PUBLIC
+  art_Framework_Services_Registry
+  art_Framework_Services_UserInteraction
+  art_Framework_Services_System_PathSelection_service
+  )
+
+art_add_module(IntProducer IntProducer_module.cc)
+art_add_module(IntTestAnalyzer  IntTestAnalyzer_module.cc)
+art_add_module(IntVectorAnalyzer IntVectorAnalyzer_module.cc)
+art_add_module(IntVectorProducer IntVectorProducer_module.cc)
+
+art_add_module(MixAnalyzer MixAnalyzer_module.cc)
+set_boost_unit_properties(art_test_Integration_MixAnalyzer_module)
+
+art_add_module(MixFilterTest MixFilterTest_module.cc)
+set_boost_unit_properties(art_test_Integration_MixFilterTest_module)
+art_module_link_libraries(MixFilterTest PUBLIC art_Framework_IO_ProductMix)
+
+art_add_module(MixFilterTestETS MixFilterTestETS_module.cc)
+set_boost_unit_properties(art_test_Integration_MixFilterTestETS_module)
+art_module_link_libraries(MixFilterTestETS PUBLIC art_Framework_IO_ProductMix)
+
+art_add_module(MixFilterTestETSc MixFilterTestETSc_module.cc)
+set_boost_unit_properties(art_test_Integration_MixFilterTestETSc_module)
+art_module_link_libraries(MixFilterTestETSc PUBLIC art_Framework_IO_ProductMix)
+
+art_add_module(MixFilterTestNoStartEvent MixFilterTestNoStartEvent_module.cc)
+set_boost_unit_properties(art_test_Integration_MixFilterTestNoStartEvent_module)
+art_module_link_libraries(MixFilterTestNoStartEvent PUBLIC art_Framework_IO_ProductMix)
+
+art_add_module(MixFilterTestOldStartEvent MixFilterTestOldStartEvent_module.cc)
+set_boost_unit_properties(art_test_Integration_MixFilterTestOldStartEvent_module)
+art_module_link_libraries(MixFilterTestOldStartEvent PUBLIC art_Framework_IO_ProductMix)
+
+art_add_module(MixProducer MixProducer_module.cc)
+art_add_module(MockClusterListAnalyzer MockClusterListAnalyzer_module.cc)
+art_add_module(MockClusterListProducer MockClusterListProducer_module.cc)
+art_add_module(PausingAnalyzer PausingAnalyzer_module.cc)
+
+art_add_module(ProductIDGetter ProductIDGetter_module.cc)
+set_boost_unit_properties(art_test_Integration_ProductIDGetter_module)
+
+art_add_module(ProductIDGetterNoPut ProductIDGetterNoPut_module.cc)
+set_boost_unit_properties(art_test_Integration_ProductIDGetterNoPut_module)
+
+art_add_module(ProductIDGetterAnalyzer ProductIDGetterAnalyzer_module.cc)
+set_boost_unit_properties(art_test_Integration_ProductIDGetterAnalyzer_module)
+
+art_add_module(PtrListAnalyzer PtrListAnalyzer_module.cc)
+art_add_module(PtrVectorSimpleAnalyzer PtrVectorSimpleAnalyzer_module.cc)
+
+art_add_module(PtrmvAnalyzer PtrmvAnalyzer_module.cc)
+set_boost_unit_properties(art_test_Integration_PtrmvAnalyzer_module)
+
+art_add_module(PtrmvProducer PtrmvProducer_module.cc)
+
+art_add_module(RandomNumberSaveTest RandomNumberSaveTest_module.cc)
+set_boost_unit_properties(art_test_Integration_RandomNumberSaveTest_module)
+
+art_add_service(Reconfigurable Reconfigurable_service.cc)
+
+art_add_module(Reconfiguring Reconfiguring_module.cc)
+art_add_module(RunSubRunProductProducerNoPut RunSubRunProductProducerNoPut_module.cc)
+
+art_add_module(SAMMetadataTest SAMMetadataTest_module.cc)
+art_module_link_libraries(SAMMetadataTest PUBLIC art_Framework_Services_System_FileCatalogMetadata_service)
+
+art_add_service(ServiceUsing ServiceUsing_service.cc)
+
+art_add_module(SimpleDerivedAnalyzer SimpleDerivedAnalyzer_module.cc)
+art_add_module(SimpleDerivedProducer SimpleDerivedProducer_module.cc)
+
+art_add_module(TH1DataProducer TH1DataProducer_module.cc)
+art_module_link_libraries(TH1DataProducer PUBLIC art_test_TestObjects)
+
+art_add_module(TestAnalyzerSelect TestAnalyzerSelect_module.cc)
+art_add_module(TestBitsOutput TestBitsOutput_module.cc)
+art_add_module(TestFilter TestFilter_module.cc)
+art_add_module(TestFilterSpecificEvents TestFilterSpecificEvents_module.cc)
+art_add_module(TestOutput TestOutput_module.cc)
+
+art_add_module(TestProvenanceDumper TestProvenanceDumper_module.cc)
+set_boost_unit_properties(art_test_Integration_TestProvenanceDumper_module)
+
+art_add_module(TestResultAnalyzer TestResultAnalyzer_module.cc)
+art_add_module(TestServiceUsingService TestServiceUsingService_module.cc)
+set_boost_unit_properties(art_test_Integration_TestServiceUsingService_module)
+
+art_add_module(TestSimpleMemoryCheckProducer TestSimpleMemoryCheckProducer_module.cc)
+art_add_module(TestTimeTrackerProducer TestTimeTrackerProducer_module.cc)
+art_add_module(TestTimeTrackerFilter TestTimeTrackerFilter_module.cc)
+art_add_module(TestTimeTrackerAnalyzer TestTimeTrackerAnalyzer_module.cc)
+
+art_add_service(Throwing Throwing_service.cc)
+
+art_add_module(ToyProductAnalyzer ToyProductAnalyzer_module.cc)
+art_add_module(ToyProductProducer ToyProductProducer_module.cc)
+art_add_module(ToyProductProducerMultiput ToyProductProducerMultiput_module.cc)
+
+art_add_source(ToyRawFileInput ToyRawFileInput_source.cc)
+set_boost_unit_properties(art_test_Integration_ToyRawFileInput_source)
+art_source_link_libraries(ToyRawFileInput art_test_Integration)
+
+art_add_source(ToyRawInput ToyRawInput_source.cc)
+set_boost_unit_properties(art_test_Integration_ToyRawInput_source)
+art_source_link_libraries(ToyRawInput art_test_Integration)
+
+art_add_module(ToyRawInputTester ToyRawInputTester_module.cc)
+art_add_module(ToyRawProductAnalyzer ToyRawProductAnalyzer_module.cc)
+art_add_module(U_S U_S_module.cc)
+art_add_module(ValidHandleTester ValidHandleTester_module.cc)
+
+art_add_service(Wanted Wanted_service.cc)
+
+include_directories(${cetlib_INCLUDE_DIR})
+art_dictionary(DICTIONARY_LIBRARIES cetlib::cetlib NO_INSTALL)
 
 cet_test(EventSelectorFromFile_w HANDBUILT
   TEST_EXEC art
@@ -136,7 +203,8 @@ cet_test(EventSelectorFromFile_r2 HANDBUILT
   TEST_PROPERTIES DEPENDS EventSelectorFromFile_w
 )
 
-cet_test(test_dropAllEventsSubruns_t.sh PREBUILT
+cet_test(test_dropAllEventsSubruns_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/test_dropAllEventsSubruns_t.sh
   DATAFILES
   fcl/dropAllEvents_t.fcl
   fcl/dropAllEventsSubruns_t1.fcl
@@ -162,12 +230,14 @@ cet_test(testOutputRanges_dropAllEventsSubruns HANDBUILT
   TEST_PROPERTIES DEPENDS test_dropAllEventsSubruns_t.sh
   )
 
-cet_test(test_runSubRunNoPut_t.sh PREBUILT
+cet_test(test_runSubRunNoPut_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/test_runSubRunNoPut_t.sh
   DATAFILES
   fcl/runSubRunNoPut_t.fcl
   )
 
-cet_test(test_simple_01_t.sh PREBUILT
+cet_test(test_simple_01_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/test_simple_01_t.sh
   DATAFILES
   fcl/test_simple_01.fcl
   fcl/test_simple_01r.fcl
@@ -175,7 +245,8 @@ cet_test(test_simple_01_t.sh PREBUILT
   test_simple_01_verify.cxx
 )
 
-cet_test(test_view_01_t.sh PREBUILT
+cet_test(test_view_01_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/test_view_01_t.sh
   DATAFILES
   fcl/test_view_01a.fcl
   fcl/test_view_01b.fcl
@@ -206,7 +277,8 @@ cet_test(SimpleDerived_02_r HANDBUILT
   TEST_PROPERTIES DEPENDS SimpleDerived_01_w
 )
 
-cet_test(outputCommand_t.sh PREBUILT
+cet_test(outputCommand_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/outputCommand_t.sh
   DATAFILES
   fcl/outputCommand_w.fcl
   fcl/outputCommand_r.fcl
@@ -221,7 +293,8 @@ cet_test(ptr_list_t HANDBUILT
   fcl/messageDefaults.fcl
 )
 
-cet_test(test_failingProducer_t.sh PREBUILT
+cet_test(test_failingProducer_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/test_failingProducer_t.sh
   DATAFILES
   fcl/test_failingProducer_w.fcl
   fcl/test_failingProducer_r.fcl
@@ -252,7 +325,8 @@ cet_test(issue_0923_r HANDBUILT
   TEST_PROPERTIES DEPENDS issue_0923_w
 )
 
-cet_test(issue_0926_t.sh PREBUILT
+cet_test(issue_0926_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/issue_0926_t.sh
   DATAFILES
   fcl/issue_0926a.fcl
   fcl/issue_0926b.fcl
@@ -260,7 +334,8 @@ cet_test(issue_0926_t.sh PREBUILT
   fcl/messageDefaults.fcl
 )
 
-cet_test(issue_0940_t.sh PREBUILT
+cet_test(issue_0940_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/issue_0940_t.sh
   DATAFILES
   fcl/issue_0940.fcl
   fcl/messageDefaults.fcl
@@ -1153,7 +1228,8 @@ cet_test(BlockingPrescaler_t HANDBUILT
   fcl/BlockingPrescaler_t.fcl
   )
 
-cet_test(test_compressed_simple_01_t.sh PREBUILT
+cet_test(test_compressed_simple_01_t.sh HANDBUILT
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/test_compressed_simple_01_t.sh
   DATAFILES
   fcl/test_compressed_simple_01.fcl
   fcl/test_compressed_simple_01r.fcl
@@ -1285,7 +1361,9 @@ cet_test(rename-histfile_t_check HANDBUILT
   TEST_PROPERTIES DEPENDS rename-histfile_t_w
 )
 
-simple_plugin(TestMetadata "plugin" NO_INSTALL art_Framework_Core fhiclcpp)
+add_library(art_test_Integration_TestMetadata_plugin SHARED TestMetadata_plugin.cc)
+target_link_libraries(art_test_Integration_TestMetadata_plugin PUBLIC art_Framework_Core fhiclcpp::fhiclcpp)
+
 cet_test(TestMetadata_plugin_t HANDBUILT
   TEST_EXEC art
   TEST_ARGS --rethrow-all -c TestMetadata_Plugin_t.fcl
@@ -1313,8 +1391,11 @@ set_source_files_properties(TestEmptyEventTimestampNoRSRTS_plugin.cc
   PROPERTIES COMPILE_DEFINITIONS TEST_USE_LAST_EVENT_TIMESTAMP
 )
 
-simple_plugin(TestEmptyEventTimestamp "plugin" NO_INSTALL art_Framework_Core fhiclcpp)
-simple_plugin(TestEmptyEventTimestampNoRSRTS "plugin" NO_INSTALL art_Framework_Core fhiclcpp)
+add_library(art_test_Integration_TestEmptyEventTimestamp_plugin SHARED TestEmptyEventTimestamp_plugin.cc)
+target_link_libraries(art_test_Integration_TestEmptyEventTimestamp_plugin PUBLIC art_Framework_Core fhiclcpp::fhiclcpp)
+
+add_library(art_test_Integration_TestEmptyEventTimestampNoRSRTS_plugin SHARED TestEmptyEventTimestampNoRSRTS_plugin.cc)
+target_link_libraries(art_test_Integration_TestEmptyEventTimestampNoRSRTS_plugin PUBLIC art_Framework_Core fhiclcpp::fhiclcpp)
 
 cet_test(TestEmptyEventTimestamp_t HANDBUILT
   TEST_EXEC art
@@ -1331,8 +1412,8 @@ cet_test(TestEmptyEventTimestampNoRSRTS_t HANDBUILT
   fcl/TestEmptyEventTimestampNoRSRTS_t.fcl
   )
 
-simple_plugin(FindManySpeedTestProducer "module" NO_INSTALL)
-simple_plugin(FindManySpeedTestAnalyzer "module" NO_INSTALL)
+art_add_module(FindManySpeedTestProducer FindManySpeedTestProducer_module.cc)
+art_add_module(FindManySpeedTestAnalyzer FindManySpeedTestAnalyzer_module.cc)
 
 add_subdirectory(testPtrVector)
 add_subdirectory(test_tiered_input_01)
@@ -1392,8 +1473,10 @@ cet_test(NonexistentPathCheck_02_t HANDBUILT
 
 include(legacy-tests)
 
-simple_plugin(RPTest "plugin" NO_INSTALL art_Framework_Core)
-simple_plugin(RPTestReader "plugin" NO_INSTALL art_Framework_Core)
+add_library(art_test_Integration_RPTest_plugin SHARED RPTest_plugin.cc)
+target_link_libraries(art_test_Integration_RPTest_plugin PUBLIC art_Framework_Core)
+add_library(art_test_Integration_RPTestReader_plugin SHARED RPTestReader_plugin.cc)
+target_link_libraries(art_test_Integration_RPTestReader_plugin PUBLIC art_Framework_Core)
 
 cet_test(RPTest_conf_err_01 HANDBUILT
   TEST_EXEC art
@@ -1443,7 +1526,8 @@ cet_test(RPTest_r2 HANDBUILT
 set_tests_properties(RPTest_r PROPERTIES DEPENDS "RPTest_w;RPTest_w2")
 set_tests_properties(RPTest_r2 PROPERTIES DEPENDS "RPTest_w;RPTest_w2")
 
-simple_plugin(EmptyPSetRegistryChecker "module" NO_INSTALL USE_BOOST_UNIT)
+art_add_module(EmptyPSetRegistryChecker EmptyPSetRegistryChecker_module.cc)
+set_boost_unit_properties(art_test_Integration_EmptyPSetRegistryChecker_module)
 
 cet_test(EmptyPSetRegistryChecker_w1 HANDBUILT
   TEST_EXEC art
@@ -1473,8 +1557,11 @@ cet_test(EmptyPSetRegistryChecker_r2 HANDBUILT
   TEST_PROPERTIES DEPENDS EmptyPSetRegistryChecker_w2
 )
 
-simple_plugin(SimpleServiceTest "service" NO_INSTALL)
-simple_plugin(SimpleServiceTestAnalyzer "module" NO_INSTALL art_test_Integration_SimpleServiceTest_service)
+art_add_service(SimpleServiceTest SimpleServiceTest.h SimpleServiceTest_service.cc)
+art_add_module(SimpleServiceTestAnalyzer SimpleServiceTestAnalyzer_module.cc)
+art_module_link_libraries(SimpleServiceTestAnalyzer
+  art_test_Integration_SimpleServiceTest_service
+  )
 
 cet_test(SimpleServiceTest_t HANDBUILT
   TEST_EXEC art
@@ -1483,5 +1570,3 @@ cet_test(SimpleServiceTest_t HANDBUILT
   )
 
 add_subdirectory(fastclonefail)
-
-endif() # ALT_CMAKE

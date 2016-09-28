@@ -1,10 +1,5 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
-simple_plugin(PtrVectorAnalyzer           "module"  NO_INSTALL )
-simple_plugin(PtrVectorProducer           "module"  NO_INSTALL )
+art_add_module(PtrVectorAnalyzer PtrVectorAnalyzer_module.cc)
+art_add_module(PtrVectorProducer PtrVectorProducer_module.cc)
 
 cet_test(test_ptrvector_01a_t HANDBUILT
   TEST_EXEC art
@@ -44,4 +39,3 @@ cet_test(test_ptrvector_01e_t HANDBUILT
   TEST_PROPERTIES DEPENDS test_ptrvector_01d_t
 )
 
-endif() # ALT_CMAKE

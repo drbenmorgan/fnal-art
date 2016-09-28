@@ -1,7 +1,3 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
 #
 # Make a shareable library containing the data class
 # implementation and the dictionary.
@@ -22,8 +18,8 @@ ${CMAKE_CURRENT_BINARY_DIR}/ClonedProd_dict.cc
 #  if we are using cetlib as a UPS product
 #  or not.
 #
-if(TARGET cetlib)
-set(cetlib_lib cetlib)
+if(TARGET cetlib::cetlib)
+set(cetlib_lib cetlib::cetlib)
 else()
 set(cetlib_lib ${CETLIB})
 endif()
@@ -40,7 +36,7 @@ art_test_Integration_fastclonefail_v11_ClonedProd
 PRIVATE
 art_Framework_Core
 ${cetlib_lib}
-${ROOT_CORE}
+${ROOT_Core_LIBRARY}
 )
 
 #
@@ -115,15 +111,10 @@ VERBATIM
 # Note: We will keep this private, see the
 #       comments below.
 #
-simple_plugin(
-art_test_Integration_fastclonefail_v11_ClonedProdAnalyzer
-"module"
-art_test_Integration_fastclonefail_v11_ClonedProd
-NO_INSTALL
-BASENAME_ONLY
-SOURCE
-  ${CMAKE_CURRENT_SOURCE_DIR}/ClonedProdAnalyzer_module.cc
-)
+art_add_module(ClonedProdAnalyzer ClonedProdAnalyzer_module.cc)
+art_module_link_libraries(ClonedProdAnalyzer PUBLIC
+  art_test_Integration_fastclonefail_v11_ClonedProd
+  )
 
 #
 # Make our analyzer module private, do not
@@ -181,6 +172,5 @@ PROPERTIES
     test_fastclonefail_w
   PASS_REGULAR_EXPRESSION
     "Unable to fast clone tree"
-)
-
-endif() # ALT_CMAKE
+  ENVIRONMENT "PATH=${cetbuildtools2_MODULE_PATH}:$<TARGET_FILE_DIR:art>:$ENV{PATH}"
+  )

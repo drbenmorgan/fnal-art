@@ -1,11 +1,6 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
-simple_plugin(ThrowingAnalyzer "module" NO_INSTALL)
-simple_plugin(ThrowingProducer "module" NO_INSTALL)
-simple_plugin(DoNothingInput   "source" NO_INSTALL)
+art_add_module(ThrowingAnalyzer ThrowingAnalyzer_module.cc)
+art_add_module(ThrowingProducer ThrowingProducer_module.cc)
+art_add_source(DoNothingInput   DoNothingInput_source.cc)
 
 cet_test( EP_throwing_01_t HANDBUILT
   TEST_EXEC art
@@ -24,5 +19,3 @@ foreach(num RANGE 2 4)
     PASS_REGULAR_EXPRESSION "Throwing.*ctor"
     )
 endforeach()
-
-endif() # ALT_CMAKE

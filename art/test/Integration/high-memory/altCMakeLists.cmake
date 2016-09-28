@@ -1,15 +1,11 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
 # Tests to expose certain instances of high memory use.
 
 art_dictionary(NO_INSTALL)
 
-simple_plugin(HMSubRunProdProducer "module" NO_INSTALL)
-simple_plugin(HMRunProdProducer "module" NO_INSTALL)
-simple_plugin(TestRemoveCachedProduct "module" NO_INSTALL USE_BOOST_UNIT)
+art_add_module(HMSubRunProdProducer HMSubRunProdProducer_module.cc)
+art_add_module(HMRunProdProducer HMRunProdProducer_module.cc)
+art_add_module(TestRemoveCachedProduct TestRemoveCachedProduct_module.cc)
+set_boost_unit_properties(art_test_Integration_high-memory_TestRemoveCachedProduct_module)
 
 cet_test(HMSubRun_w HANDBUILT
   TEST_EXEC art
@@ -38,5 +34,3 @@ cet_test(TestRemoveCachedProduct_r HANDBUILT
   DATAFILES fcl/TestRemoveCachedProduct_r.fcl
   TEST_PROPERTIES DEPENDS TestRemoveCachedProduct_w
 )
-
-endif() # ALT_CMAKE

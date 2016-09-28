@@ -1,8 +1,3 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
 # Compile the exec (don't run). Yes, add_executable /
 # target_link_libraries is also fine but this is one command with a
 # uniform interface.
@@ -14,12 +9,14 @@ cet_test(Statemachine_t NO_AUTO
   art_Framework_Core
   )
 
+cet_test_env("PATH=$<TARGET_FILE_DIR:Statemachine_t>:${cetbuildtools2_MODULE_PATH}:$ENV{PATH}")
+
 cet_script(Statemachine_t.sh NO_INSTALL)
 
 # Shorthand to avoid writing almost the same thing three times.
 macro(statemachine_test i)
   cet_test(Statemachine_t_${i} HANDBUILT
-    TEST_EXEC Statemachine_t.sh
+    TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/Statemachine_t.sh
     DEPENDENCIES Statemachine_t
     DATAFILES
     unit_test_outputs/statemachine_${i}.txt
@@ -40,5 +37,3 @@ foreach(i RANGE 1 13)
     )
   statemachine_test(${j})
 endforeach()
-
-endif() # ALT_CMAKE

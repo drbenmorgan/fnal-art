@@ -1,11 +1,6 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
 set(CCV_DEFAULT_RECURSIVE FALSE)
 
-simple_plugin(BadAssnsProducer "module" NO_INSTALL)
+art_add_module(BadAssnsProducer BadAssnsProducer_module.cc)
 
 art_dictionary()
 
@@ -16,5 +11,3 @@ cet_test(BadAssns_t HANDBUILT
   TEST_PROPERTIES
   PASS_REGULAR_EXPRESSION "No dictionary found for the following classes:\n.*art::Wrapper<art::Assns<arttest::DummyProduct,arttest::StringProduct,void> >\n.*Most likely they were never"
   )
-
-endif() # ALT_CMAKE

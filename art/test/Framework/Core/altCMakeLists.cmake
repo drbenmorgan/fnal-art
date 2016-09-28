@@ -1,8 +1,4 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
+include_directories(${canvas_INCLUDE_DIR})
 art_dictionary(NO_INSTALL)
 
 # Library link requirements for tests here
@@ -10,7 +6,8 @@ set(default_test_libraries
   art_Framework_Services_Registry
   art_Framework_Core
   art_Framework_Principal
-  art_Utilities canvas_Utilities
+  art_Utilities
+  canvas::canvas_Utilities
   ${Boost_FILESYSTEM_LIBRARY}
   ${ROOT_CINTEX}
   ${ROOT_TREE}
@@ -37,20 +34,21 @@ foreach (type Analyzer Filter Output Producer)
     PROPERTIES
     COMPILE_FLAGS "-Wno-unused-parameter -Wno-return-type"
     )
-  simple_plugin(PMTest${type} "module" NO_INSTALL)
+  art_add_module(PMTest${type} PMTest${type}_module.cc)
 endforeach()
 
 cet_test(PathManager_t USE_BOOST_UNIT
   LIBRARIES
   art_Framework_Core
-  fhiclcpp
-  cetlib
+  fhiclcpp::fhiclcpp
+  cetlib::cetlib
   )
 
 #########################################################################
 # Old (pre-ART fork) tests.
 
-simple_plugin(TestMod module NO_INSTALL ${CPPUNIT})
+art_add_module(TestMod TestMod_module.cc)
+art_module_link_libraries(TestMod PUBLIC CppUnit::CppUnit)
 
 # cppunit tests en masse.
 file(GLOB cppunit_files *.cppunit.cc)
@@ -61,16 +59,16 @@ file(GLOB cppunit_files *.cppunit.cc)
 
 # We invoke MasterProductRegistry so we need some dictionaries.
 set(maker2_t_libs
-  canvas_Persistency_WrappedStdDictionaries_dict
-  canvas_Persistency_StdDictionaries_dict
-  canvas_Persistency_Common_dict
+  canvas::canvas_Persistency_WrappedStdDictionaries_dict
+  canvas::canvas_Persistency_StdDictionaries_dict
+  canvas::canvas_Persistency_Common_dict
   )
 ########################################################################
 
 foreach(cppunit_source ${cppunit_files})
   get_filename_component(test_name ${cppunit_source} NAME_WE )
   cet_test(${test_name} SOURCES testRunner.cpp ${cppunit_source}
-    LIBRARIES ${${test_name}_libs} ${default_test_libraries} ${CPPUNIT}
+    LIBRARIES ${${test_name}_libs} ${default_test_libraries} CppUnit::CppUnit
     )
 endforeach()
 
@@ -90,5 +88,3 @@ endforeach()
 cet_test(GroupSelector_t USE_BOOST_UNIT
   LIBRARIES ${default_test_libraries}
 )
-
-endif() # ALT_CMAKE

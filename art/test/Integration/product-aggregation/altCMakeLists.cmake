@@ -1,18 +1,17 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
 art_dictionary(NO_INSTALL)
 
-simple_plugin(EventGenerator       "module" NO_INSTALL)
-simple_plugin(ParticleSimulator    "module" NO_INSTALL)
-simple_plugin(Reconstruction       "module" NO_INSTALL)
-simple_plugin(CheckMoreProducts    "module" NO_INSTALL USE_BOOST_UNIT)
-simple_plugin(CheckProducts        "module" NO_INSTALL USE_BOOST_UNIT)
-simple_plugin(AssembleProducts     "module" NO_INSTALL)
-simple_plugin(AssembleMoreProducts "module" NO_INSTALL USE_BOOST_UNIT)
-simple_plugin(AssembleMoreProductsRobust "module" NO_INSTALL USE_BOOST_UNIT)
+art_add_module(EventGenerator       EventGenerator_module.cc)
+art_add_module(ParticleSimulator    ParticleSimulator_module.cc)
+art_add_module(Reconstruction       Reconstruction_module.cc)
+art_add_module(CheckMoreProducts    CheckMoreProducts_module.cc)
+set_boost_unit_properties(art_test_Integration_product-aggregation_CheckMoreProducts_module)
+art_add_module(CheckProducts        CheckProducts_module.cc)
+set_boost_unit_properties(art_test_Integration_product-aggregation_CheckProducts_module)
+art_add_module(AssembleProducts     AssembleProducts_module.cc)
+art_add_module(AssembleMoreProducts AssembleMoreProducts_module.cc)
+set_boost_unit_properties(art_test_Integration_product-aggregation_AssembleMoreProducts_module)
+art_add_module(AssembleMoreProductsRobust AssembleMoreProductsRobust_module.cc)
+set_boost_unit_properties(art_test_Integration_product-aggregation_AssembleMoreProductsRobust_module)
 
 # For the product aggregation tests, a physics workflow has been
 # simulated, using multiple stages (see below for schematic of when
@@ -203,5 +202,3 @@ cet_test(Stage5_MoreAnalysis_reordered_r HANDBUILT
   TEST_PROPERTIES
   DEPENDS Stage4_Assemble_reordered_w
   )
-
-endif() # ALT_CMAKE

@@ -1,7 +1,8 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
+include_directories(${ROOT_INCLUDE_DIRS})
+
+# dbtest_wrap_sql uses test execs, so make sure their path
+# is in the test environment
+cet_test_env("PATH=$<TARGET_FILE_DIR:tkeyvfs_t_01>:$ENV{PATH}")
 
 set_source_files_properties(
   test3.cc
@@ -10,15 +11,15 @@ set_source_files_properties(
   COMPILE_DEFINITIONS TKEYVFS_NO_ROOT
   )
 
-cet_script(dbtest_wrap_sql NO_INSTALL)
+#cet_script(dbtest_wrap_sql NO_INSTALL)
 
 cet_test(tkeyvfs_t_01 NO_AUTO
   SOURCES test1.c myvfs.c
-  LIBRARIES ${SQLITE3} ${CMAKE_DL_LIBS}
+  LIBRARIES SQLite::SQLite ${CMAKE_DL_LIBS}
   )
 
 cet_test(tkeyvfs_t_01w HANDBUILT
-  TEST_EXEC dbtest_wrap_sql
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_wrap_sql
   TEST_ARGS -c test.db tkeyvfs_t.txt tkeyvfs_t_01 test.db
   DATAFILES tkeyvfs_t.txt
   )
@@ -38,7 +39,7 @@ cet_test(tkeyvfs_t_02 NO_AUTO
   )
 
 cet_test(tkeyvfs_t_02w HANDBUILT
-  TEST_EXEC dbtest_wrap_sql
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_wrap_sql
   TEST_ARGS -c test.db tkeyvfs_t.txt tkeyvfs_t_02 w test.db test_02
   DATAFILES tkeyvfs_t.txt
   )
@@ -54,11 +55,11 @@ SET_TESTS_PROPERTIES(tkeyvfs_t_02r PROPERTIES DEPENDS tkeyvfs_t_02w)
 
 cet_test(tkeyvfs_t_03 NO_AUTO
   SOURCES test3.cc tkeyvfs_noroot.cc
-  LIBRARIES ${SQLITE3} ${CMAKE_DL_LIBS}
+  LIBRARIES SQLite::SQLite ${CMAKE_DL_LIBS}
   )
 
 cet_test(tkeyvfs_t_03w HANDBUILT
-  TEST_EXEC dbtest_wrap_sql
+  TEST_EXEC ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_wrap_sql
   TEST_ARGS -c test.db tkeyvfs_t.txt tkeyvfs_t_03 w test.db test_03
   DATAFILES tkeyvfs_t.txt
   )
@@ -71,5 +72,3 @@ cet_test(tkeyvfs_t_03r HANDBUILT
 SET_TESTS_PROPERTIES(tkeyvfs_t_03r PROPERTIES PASS_REGULAR_EXPRESSION "dob: 2011-09-12")
 
 SET_TESTS_PROPERTIES(tkeyvfs_t_03r PROPERTIES DEPENDS tkeyvfs_t_03w)
-
-endif() # ALT_CMAKE

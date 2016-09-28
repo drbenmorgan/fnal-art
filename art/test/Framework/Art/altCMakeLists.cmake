@@ -1,7 +1,6 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
+cet_test_env("FHICL_FILE_PATH=${CMAKE_CURRENT_SOURCE_DIR}:${CMAKE_CURRENT_SOURCE_DIR}/fcl:.")
+cet_test_env("PATH=$<TARGET_FILE_DIR:art>:$ENV{PATH}")
+cet_test_env("LD_LIBRARY_PATH=$<TARGET_FILE_DIR:art_Framework_Art>:$ENV{LD_LIBRARY_PATH}")
 
 set( test_Framework_Art_libraries
   art_Framework_Services_Registry
@@ -103,6 +102,7 @@ cet_test(BasicOptions_02_t HANDBUILT
   PASS_REGULAR_EXPRESSION "Basic options"
 )
 
+# Likely depends on Integration tests (plugins)
 cet_test(BasicOptions_03_t
   LIBRARIES
   art_Framework_Art
@@ -834,5 +834,3 @@ cet_test(DeprecatedMemoryTracker_r_01 HANDBUILT
   DATAFILES DeprecatedMemoryTracker_01-ref.txt
   TEST_PROPERTIES DEPENDS DeprecatedMemoryTracker_t_01
   )
-
-endif() # ALT_CMAKE

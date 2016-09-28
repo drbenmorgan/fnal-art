@@ -1,14 +1,9 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
 cet_test(GetFileFormatVersion SOURCES test_GetFileFormatVersion.cpp
   LIBRARIES art_Framework_IO_RootVersion)
 
 foreach (mode M S P)
   cet_test(config_dumper_${mode}_t HANDBUILT
-    TEST_EXEC config_dumper
+    TEST_EXEC $<TARGET_FILE:config_dumper>
     TEST_ARGS -${mode} ../../../../Integration/Assns_w.d/out.root
     REF "${CMAKE_CURRENT_SOURCE_DIR}/config_dumper_${mode}_t-ref.txt"
     TEST_PROPERTIES
@@ -22,5 +17,3 @@ cet_test(RootOutputClosingCriteria_t
   LIBRARIES
   art_Framework_IO_Root
   )
-
-endif() # ALT_CMAKE

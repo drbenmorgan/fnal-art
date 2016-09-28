@@ -1,8 +1,3 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
 # Produce outputs
 cet_test(SingleOutputProducerEmptyEvent_w HANDBUILT
   TEST_EXEC art
@@ -269,7 +264,7 @@ cet_test(SwitchOnTwoConditions_FileIndexCheck_t HANDBUILT
 ## =============================================================
 ## Test output-file switching based on file size.
 
-simple_plugin(BigProductProducer "module" NO_INSTALL)
+art_add_module(BigProductProducer BigProductProducer_module.cc)
 
 cet_test(SwitchOnFileSizeMax_w HANDBUILT
   TEST_EXEC art
@@ -287,5 +282,3 @@ cet_test(SwitchOnFileSizeMax_r HANDBUILT
   REF "${CMAKE_CURRENT_SOURCE_DIR}/SwitchOnFileSizeMax-ref.txt"
   TEST_PROPERTIES DEPENDS SwitchOnFileSizeMax_w
   )
-
-endif() # ALT_CMAKE

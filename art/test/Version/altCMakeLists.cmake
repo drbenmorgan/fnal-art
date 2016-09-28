@@ -1,10 +1,5 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
-# project name
-project(art_Version_Test)
+# Use proper version...
+set(version ${PROJECT_VERSION})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/test_GetReleaseVersion.cpp.in
   ${CMAKE_CURRENT_BINARY_DIR}/test_GetReleaseVersion.cpp @ONLY
@@ -12,7 +7,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/test_GetReleaseVersion.cpp.in
 
 cet_test(GetReleaseVersion
   SOURCES ${CMAKE_CURRENT_BINARY_DIR}/test_GetReleaseVersion.cpp
-  LIBRARIES art_Version
+  LIBRARIES art_Version  
   )
 
-endif() # ALT_CMAKE

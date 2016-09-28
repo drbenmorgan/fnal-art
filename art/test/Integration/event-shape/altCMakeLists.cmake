@@ -1,8 +1,3 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-else()
-
 art_dictionary(NO_INSTALL)
 
 #================================================================
@@ -33,11 +28,11 @@ art_dictionary(NO_INSTALL)
 # In what follows, "Extra" means that extra products are produced/put
 # in the same process that reads the input files.
 
-simple_plugin(FailEverything          "module" NO_INSTALL)
-simple_plugin(InputProducer           "module" NO_INSTALL)
-simple_plugin(InputProducerNoEvents   "module" NO_INSTALL)
-simple_plugin(InputProducerOnlyEvents "module" NO_INSTALL)
-simple_plugin(PassEverything          "module" NO_INSTALL)
+art_add_module(FailEverything          FailEverything_module.cc)
+art_add_module(InputProducer           InputProducer_module.cc)
+art_add_module(InputProducerNoEvents   InputProducerNoEvents_module.cc)
+art_add_module(InputProducerOnlyEvents InputProducerOnlyEvents_module.cc)
+art_add_module(PassEverything          PassEverything_module.cc)
 
 # (4)      a.root   b.root
 #          ======   ======
@@ -508,8 +503,8 @@ cet_test( ExpandedRunSubrunEventShapes_04_r HANDBUILT
 #  FIXME: Should be more explicit about what kinds of shapes we're
 #         testing here.
 
-simple_plugin(ESPrimaryProducer   "module" NO_INSTALL)
-simple_plugin(ESSecondaryProducer "module" NO_INSTALL)
+art_add_module(ESPrimaryProducer   ESPrimaryProducer_module.cc)
+art_add_module(ESSecondaryProducer ESSecondaryProducer_module.cc)
 
 # First processes: create files with two collections.
 cet_test(ES_w01 HANDBUILT
@@ -576,5 +571,3 @@ set_tests_properties( SameRunSubrunEventShapes_05_r PROPERTIES
 set_tests_properties( SameRunSubrunEventShapes_06_r PROPERTIES
   DEPENDS "SameRunSubrunEventShapes_filter_01_w;SameRunSubrunEventShapes_filter_02_w"
   )
-
-endif() # ALT_CMAKE
