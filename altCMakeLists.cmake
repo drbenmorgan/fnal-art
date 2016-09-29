@@ -38,7 +38,12 @@ find_package(fhiclcpp REQUIRED)
 find_package(cetlib REQUIRED)
 find_package(TBB REQUIRED)
 find_package(CLHEP REQUIRED)
+
 find_package(ROOT 6 REQUIRED)
+# ROOT's version from UPS/FindROOT might be funky, "6.06/04" so
+# remove slashes
+string(REPLACE "/" "." ROOT_VERSION "${ROOT_VERSION}")
+
 find_package(Boost REQUIRED filesystem system thread unit_test_framework)
 find_package(SQLite REQUIRED)
 # - Defer CPPUnit to tests
