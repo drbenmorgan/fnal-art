@@ -1,3 +1,8 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+else()
+
 include(ArtMake)
 
 add_subdirectory(sqlite/memoryTracker)
@@ -79,3 +84,5 @@ if (CETSKEL)
     )
   simple_plugin(ToolsTestServiceImpl "service" NO_INSTALL tools)
 endif()
+
+endif() # ALT_CMAKE

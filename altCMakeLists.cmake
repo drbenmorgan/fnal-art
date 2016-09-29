@@ -58,7 +58,7 @@ include_directories(${PROJECT_BINARY_DIR})
 #add_subdirectory(perllib)
 
 # tools
-#add_subdirectory(tools)
+add_subdirectory(tools)
 
 # source
 add_subdirectory(art)
