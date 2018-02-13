@@ -1,3 +1,9 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+  return()
+endif()
+
 configure_file ( ${CMAKE_CURRENT_SOURCE_DIR}/GetReleaseVersion.cc.in
   ${CMAKE_CURRENT_BINARY_DIR}/GetReleaseVersion.cc @ONLY )
 
