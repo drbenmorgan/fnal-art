@@ -1,3 +1,9 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+  return()
+endif()
+
 simple_plugin(BlockingPrescaler       "module")
 simple_plugin(DataFlowDumper          "module")
 simple_plugin(EmptyEvent              "source")
