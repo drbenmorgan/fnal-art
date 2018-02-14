@@ -46,9 +46,9 @@ target_link_libraries(art_Framework_IO
     )
 
 # Actual subdirectories
-#add_subdirectory(Catalog) Requires TrivialFileTransfer_service
-#add_subdirectory(ProductMix) Requires System/Option services, and art_Framework_Core
-#add_subdirectory(Root) whole lot of stuff...
+add_subdirectory(Catalog)
+add_subdirectory(ProductMix)
+add_subdirectory(Root)
 add_subdirectory(Sources)
 
 
@@ -57,26 +57,8 @@ install(TARGETS art_Framework_IO_detail art_Framework_IO
   DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 
-# install (DIRECTORY header...)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/Framework/IO
+  FILES_MATCHING PATTERN "*.h"
+  )
 
-
-
-
-
-#art_make(LIB_LIBRARIES
-#  art_Framework_IO_detail
-#  art_Persistency_Provenance canvas
-#  ${Boost_DATE_TIME_LIBRARY}
-#  ${Boost_FILESYSTEM_LIBRARY}
-#  ${Boost_REGEX_LIBRARY}
-#)
-
-#install_headers()
-#install_source()
-
-# build art_Framework_IO libraries
-#add_subdirectory (Catalog)
-#add_subdirectory (ProductMix)
-#add_subdirectory (Root)
-#add_subdirectory (Sources)
-#add_subdirectory (detail)

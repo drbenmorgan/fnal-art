@@ -31,7 +31,7 @@ find_package(ROOT REQUIRED)
 # find_package(CPPUNIT REQUIRED ... for testing ...)
 
 # macros for art_dictionary and simple_plugin
-#include(ArtDictionary)
+include(ArtDictionary)
 include(BuildPlugins)
 
 #if (NOT APPLE)
