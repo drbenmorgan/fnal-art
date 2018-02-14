@@ -1,3 +1,9 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+  return()
+endif()
+
 set(art_Framework_Services_Registry_sources
   ServiceRegistry.cc
   ServicesManager.cc
