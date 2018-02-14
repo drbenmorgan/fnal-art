@@ -1,3 +1,9 @@
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  include(altCMakeLists.cmake)
+  return()
+endif()
+
 art_make(LIB_LIBRARIES
   art_Framework_IO_detail
   art_Persistency_Provenance canvas
