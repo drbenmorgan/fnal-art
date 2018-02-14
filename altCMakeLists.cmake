@@ -24,6 +24,7 @@ find_package(cetlib_except 1.1.0 REQUIRED)
 find_package(CLHEP REQUIRED)
 find_package(SQLite REQUIRED)
 #find_ups_product(range)
+find_package(TBB REQUIRED)
 find_package(Boost REQUIRED)
 find_package(ROOT REQUIRED)
 
