@@ -32,7 +32,7 @@ find_package(ROOT REQUIRED)
 
 # macros for art_dictionary and simple_plugin
 #include(ArtDictionary)
-#include(BuildPlugins)
+include(BuildPlugins)
 
 #if (NOT APPLE)
 #  set(RT -lrt)
