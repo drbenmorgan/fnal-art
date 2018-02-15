@@ -1,25 +1,18 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-  return()
-endif()
-
 # cet_test macro
 set(default_art_test_libraries
   art_Utilities
   art_Version
-  canvas
-  cetlib
-  MF_MessageLogger
+  canvas::canvas
+  cetlib::cetlib
+  messagefacility::MF_MessageLogger
   )
-
 
 add_subdirectory(tools)
 
 cet_test(make_tool_t USE_BOOST_UNIT LIBRARIES ${default_art_test_libraries})
 
 cet_test(ParameterSet_get_CLHEP_t
-  LIBRARIES ${default_art_test_libraries} ${CLHEP}
+  LIBRARIES ${default_art_test_libraries} CLHEP::CLHEP
   )
 
 cet_test(pointersEqual_t USE_BOOST_UNIT
@@ -34,10 +27,10 @@ foreach(test_cpp MallocOpts_t.cpp)
     )
 endforeach()
 
-cet_test(ScheduleID_t USE_BOOST_UNIT)
+cet_test(ScheduleID_t USE_BOOST_UNIT LIBRARIES art_Utilities)
 
 cet_test(parent_path_t USE_BOOST_UNIT
-  LIBRARIES art_Utilities canvas)
+  LIBRARIES art_Utilities canvas::canvas)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   cet_test(Proc_t LIBRARIES art_Utilities)
