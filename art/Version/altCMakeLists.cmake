@@ -1,3 +1,6 @@
+# Normalize version to UPS style
+set(version "${PROJECT_VERSION}")
+string(REPLACE "." "_" version "${version}")
 configure_file(GetReleaseVersion.cc.in GetReleaseVersion.cc @ONLY)
 
 add_library(art_Version SHARED GetReleaseVersion.h ${CMAKE_CURRENT_BINARY_DIR}/GetReleaseVersion.cc)
