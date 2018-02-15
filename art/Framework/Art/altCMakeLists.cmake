@@ -1,9 +1,3 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-  return()
-endif()
-
 # Configure file to handle differences for Mac.
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/check_libs.cc.in
   ${CMAKE_CURRENT_BINARY_DIR}/check_libs.cc @ONLY
@@ -31,9 +25,10 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/artapp.cc.in
   )
 ####################################
 
-add_subdirectory(detail)
-add_subdirectory(detail/md-collector)
-add_subdirectory(detail/md-summary)
+# No builds under here
+#add_subdirectory(detail)
+#add_subdirectory(detail/md-collector)
+#add_subdirectory(detail/md-summary)
 
 set(art_Framework_Art_sources
   BasicOptionsHandler.cc
@@ -59,38 +54,57 @@ set(art_Framework_Art_sources
   detail/get_MetadataSummary.cc
   )
 
-art_make_library(LIBRARY_NAME art_Framework_Art
-                 SOURCE ${art_Framework_Art_sources}
-                 LIBRARIES ${Boost_PROGRAM_OPTIONS_LIBRARY}
+add_library(art_Framework_Art SHARED ${art_Framework_Art_sources})
+
+target_include_directories(art_Framework_Art PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+
+target_link_libraries(art_Framework_Art PUBLIC
   art_Framework_EventProcessor
   art_Framework_Core
   art_Utilities
   art_Version
-  MF_MessageLogger
+  messagefacility::MF_MessageLogger
+  Boost::program_options
   # The following are used for InitRootHandlers
   art_Framework_IO_Root
   art_Framework_IO_Root_RootDB
-  ${ROOT_HIST}
-  ${ROOT_TREE}
+  ROOT::Hist
+  ROOT::Tree
   )
+
+install(TARGETS art_Framework_Art
+  EXPORT ${PROJECT_NAME}Targets
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/Framework/Art
+  FILES_MATCHING PATTERN "*.h"
+  )
+
+
+
 
 # Build an art exec.
 macro(art_exec TARGET_STEM IN_STEM MAIN_FUNC)
-  cet_parse_args(AE "LIBRARIES" "" ${ARGN})
+  cmake_parse_arguments(AE "" "" "LIBRARIES" ${ARGN})
   set(ART_MAIN_FUNC ${MAIN_FUNC})
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${IN_STEM}.cc.in
     ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_STEM}.cc @ONLY
     )
-  art_make_exec(NAME ${TARGET_STEM}
-    SOURCE ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_STEM}.cc
-    ${AE_DEFAULT_ARGS}
-    LIBRARIES
-    ${AE_LIBRARIES}
-    art_Framework_Art
-    MF_MessageLogger
-    )
-  # Enable plugins to access symbols exported by the exec (CMake policy CMP0065).
+
+  add_executable(${TARGET_STEM} ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_STEM}.cc)
+  target_link_libraries(${TARGET_STEM} PRIVATE art_Framework_Art messagefacility::MF_MessageLogger ${AE_LIBRARIES})
+
   set_property(TARGET ${TARGET_STEM} PROPERTY ENABLE_EXPORTS TRUE)
+  # Enable plugins to access symbols exported by the exec (CMake policy CMP0065).
+  install(TARGETS ${TARGET_STEM}
+    EXPORT ${PROJECT_NAME}Targets
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
 endmacro()
 
 # Standard execs
@@ -101,18 +115,16 @@ art_exec(mu2e art mu2eapp)
 art_exec(nova art artapp)
 
 # Execs with Boost unit testing enabled for modules.
-art_exec(art_ut art_ut artapp LIBRARIES ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-art_exec(gm2_ut art_ut artapp LIBRARIES ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-art_exec(lar_ut art_ut artapp LIBRARIES ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-art_exec(mu2e_ut art_ut mu2eapp LIBRARIES ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-art_exec(nova_ut art_ut artapp LIBRARIES ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+find_package(Boost QUIET REQUIRED unit_test_framework)
+art_exec(art_ut art_ut artapp LIBRARIES Boost::unit_test_framework)
+art_exec(gm2_ut art_ut artapp LIBRARIES Boost::unit_test_framework)
+art_exec(lar_ut art_ut artapp LIBRARIES Boost::unit_test_framework)
+art_exec(mu2e_ut art_ut mu2eapp LIBRARIES Boost::unit_test_framework)
+art_exec(nova_ut art_ut artapp LIBRARIES Boost::unit_test_framework)
 
-art_make_exec(NAME check_libs
-  SOURCE ${CMAKE_CURRENT_BINARY_DIR}/check_libs.cc
-  LIBRARIES
-  art_Utilities canvas
-  cetlib
+add_executable(check_libs ${CMAKE_CURRENT_BINARY_DIR}/check_libs.cc)
+target_link_libraries(check_libs PRIVATE art_Utilities canvas::canvas cetlib::cetlib)
+install(TARGETS check_libs
+  EXPORT ${PROJECT_NAME}Targets
+  DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
-
-install_headers()
-install_source()
