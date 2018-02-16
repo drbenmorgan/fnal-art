@@ -1,3 +1,5 @@
+configure_file (GetReleaseVersion.cc.in GetReleaseVersion.cc @ONLY)
+
 add_library(art_Version SHARED GetReleaseVersion.h ${CMAKE_CURRENT_BINARY_DIR}/GetReleaseVersion.cc)
 target_include_directories(art_Version PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
