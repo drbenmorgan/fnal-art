@@ -1,4 +1,10 @@
-art_make_library(SOURCE fpc_utils.cc)
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+if(ALT_CMAKE)
+  add_library(art_test_Framework_Services_Basic SHARED fpc_utils.cc)
+  target_include_directories(art_test_Framework_Services_Basic PUBLIC ${PROJECT_SOURCE_DIR})
+else()
+  art_make_library(SOURCE fpc_utils.cc)
+endif()
 
 simple_plugin(TestTFileService "module" NO_INSTALL
   art_Framework_Services_Optional_TFileService_service ${ROOT_HIST} ${ROOT_GRAF})

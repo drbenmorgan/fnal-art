@@ -3,6 +3,19 @@ set(CMAKE_MODULE_PATH
   ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
+# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
+#   Only Library build
+if(ALT_CMAKE)
+  add_library(art_test_Integration SHARED ToySource.cc)
+  target_include_directories(art_test_Integration PUBLIC ${PROJECT_SOURCE_DIR})
+  # Use "bare" name of fhiclcpp for compatibility, this can be a one-to-one
+  # replacement as art_make_library slight overkill for one source lib
+  target_link_libraries(art_test_Integration PUBLIC
+    art_Framework_Core
+    art_Framework_IO_Sources
+    fhiclcpp
+    )
+else()
 art_make_library(SOURCE
   ToySource.cc
   LIBRARIES art_Framework_IO_Sources
@@ -10,6 +23,7 @@ art_make_library(SOURCE
   fhiclcpp
   NO_INSTALL
   )
+endif()
 
 set_source_files_properties(MixFilterTestETS_module.cc
   PROPERTIES COMPILE_DEFINITIONS ART_TEST_EVENTS_TO_SKIP_CONST=0

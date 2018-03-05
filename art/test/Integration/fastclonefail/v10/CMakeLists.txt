@@ -1,9 +1,16 @@
+if(ALT_CMAKE)
+add_library(art_test_Integration_fastclonefail_v10 SHARED ClonedProd.cc)
+target_include_directories(art_test_Integration_fastclonefail_v10 PUBLIC ${PROJECT_SOURCE_DIR})
+target_link_libraries(art_test_Integration_fastclonefail_v10 PUBLIC
+  art_Framework_Core cetlib ${ROOT_CORE})
+else()
 art_make_library(
   LIBRARIES
   art_Framework_Core cetlib ${ROOT_CORE}
   SOURCE ClonedProd.cc
   NO_INSTALL
 )
+endif()
 
 art_dictionary(NO_INSTALL DICTIONARY_LIBRARIES art_test_Integration_fastclonefail_v10)
 
