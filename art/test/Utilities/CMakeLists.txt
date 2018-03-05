@@ -1,9 +1,3 @@
-# - When user supplies "-DALT_CMAKE" use the non-CET/UPS system
-if(ALT_CMAKE)
-  include(altCMakeLists.cmake)
-  return()
-endif()
-
 # cet_test macro
 set(default_art_test_libraries
   art_Utilities
