@@ -6,7 +6,7 @@ set(version "${PROJECT_VERSION}")
 string(REPLACE "." "_" version "${version}")
 
 # - Cetbuildtools, version2
-find_package(cetbuildtools2 0.1.0 REQUIRED)
+find_package(cetbuildtools2 0.4.0 REQUIRED)
 set(CMAKE_MODULE_PATH ${cetbuildtools2_MODULE_PATH})
 set(CET_COMPILER_CXX_STANDARD_MINIMUM 14)
 include(CetInstallDirs)
@@ -24,14 +24,15 @@ find_package(messagefacility REQUIRED)
 find_package(fhiclcpp REQUIRED)
 find_package(cetlib REQUIRED)
 find_package(cetlib_except 1.1.0 REQUIRED)
-find_package(CLHEP REQUIRED)
-find_package(SQLite REQUIRED)
-#find_ups_product(range)
-find_package(TBB REQUIRED)
 find_package(Boost REQUIRED)
+find_package(CLHEP REQUIRED)
+# Art doesn't appear to use range-v3 directly, at least
+# via #inclusion search (yet). Canvas use will forward on
+# use if using it through that interface.
+#find_ups_product(range)
 find_package(ROOT REQUIRED)
-
-# find_package(CPPUNIT REQUIRED ... for testing ...)
+find_package(SQLite REQUIRED)
+find_package(TBB REQUIRED)
 
 # macros for art_dictionary and simple_plugin
 include(ArtDictionary)
