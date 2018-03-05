@@ -12,6 +12,8 @@ add_library(art_Framework_IO_Root_RootDB SHARED
 target_include_directories(art_Framework_IO_Root_RootDB PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  # Until ROOT properly supports usage requirements
+  $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>
   )
 
 target_link_libraries(art_Framework_IO_Root_RootDB

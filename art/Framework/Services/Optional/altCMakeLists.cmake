@@ -1,3 +1,6 @@
+# Because ROOT does not declare usage requirements fully yet
+include_directories(SYSTEM ${ROOT_INCLUDE_DIRS})
+
 add_library(art_Framework_Services_Optional SHARED
   TFileDirectory.h
   TFileDirectory.cc

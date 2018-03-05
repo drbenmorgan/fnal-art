@@ -105,6 +105,8 @@ add_library(art_Framework_IO_Root SHARED
 target_include_directories(art_Framework_IO_Root PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  # Until ROOT supplies full usage requirements
+  $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>
   )
 target_link_libraries(art_Framework_IO_Root
   PUBLIC
@@ -129,9 +131,11 @@ simple_plugin(RootOutput "module" art_Framework_IO_Root)
 
 
 add_executable(product_sizes_dumper product_sizes_dumper.cc)
+target_include_directories(product_sizes_dumper PRIVATE $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>)
 target_link_libraries(product_sizes_dumper PRIVATE art_Framework_IO_Root ROOT::Core ROOT::RIO Boost::program_options)
 
 add_executable(config_dumper config_dumper.cc)
+target_include_directories(config_dumper PRIVATE $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>)
 target_link_libraries(config_dumper
   PRIVATE
     art_Framework_IO_Root
@@ -144,6 +148,7 @@ target_link_libraries(config_dumper
     )
 
 add_executable(sam_metadata_dumper sam_metadata_dumper.cc)
+target_include_directories(sam_metadata_dumper PRIVATE $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>)
 target_link_libraries(sam_metadata_dumper
   PRIVATE
     art_Framework_IO_Root
@@ -158,6 +163,7 @@ target_link_libraries(sam_metadata_dumper
     )
 
 add_executable(count_events count_events.cc)
+target_include_directories(count_events PRIVATE $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>)
 target_link_libraries(count_events
   PRIVATE
     canvas::canvas
@@ -168,6 +174,7 @@ target_link_libraries(count_events
     )
 
 add_executable(file_info_dumper file_info_dumper.cc)
+target_include_directories(file_info_dumper PRIVATE $<BUILD_INTERFACE:${ROOT_INCLUDE_DIRS}>)
 target_link_libraries(file_info_dumper
   PRIVATE
     art_Framework_IO_RootVersion
@@ -180,6 +187,7 @@ target_link_libraries(file_info_dumper
     ROOT::RIO
     SQLite::SQLite
     )
+
 
 
 install(

@@ -19,12 +19,13 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules/AltCMake)
 #-----------------------------------------------------------------------
 # Dependencies
 find_package(canvas_root_io 1.4.2 REQUIRED)
-find_package(canvas 1.0.6 REQUIRED)
+find_package(canvas REQUIRED)
 find_package(messagefacility REQUIRED)
 find_package(fhiclcpp REQUIRED)
 find_package(cetlib REQUIRED)
 find_package(cetlib_except 1.1.0 REQUIRED)
-find_package(Boost REQUIRED)
+# Must specify directly used components
+find_package(Boost REQUIRED date_time filesystem system thread)
 find_package(CLHEP REQUIRED)
 # Art doesn't appear to use range-v3 directly, at least
 # via #inclusion search (yet). Canvas use will forward on
