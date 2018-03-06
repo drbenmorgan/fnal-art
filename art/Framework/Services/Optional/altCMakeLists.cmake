@@ -70,6 +70,22 @@ simple_plugin(Tracer "service" canvas::canvas)
 simple_plugin(TrivialFileDelivery "service")
 simple_plugin(TrivialFileTransfer "service")
 
-# As with others, need to think about install
-# due to complex names
+install(TARGETS
+  art_Framework_Services_Optional
+  art_Framework_Services_Optional_RandomNumberGenerator_service
+  art_Framework_Services_Optional_MemoryAdjuster_service
+  art_Framework_Services_Optional_MemoryTracker_service
+  art_Framework_Services_Optional_TFileService_service
+  art_Framework_Services_Optional_TimeTracker_service
+  art_Framework_Services_Optional_Tracer_service
+  art_Framework_Services_Optional_TrivialFileDelivery_service
+  art_Framework_Services_Optional_TrivialFileTransfer_service
+  EXPORT ${PROJECT_NAME}Targets
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/Framework/Services/Optional
+  FILES_MATCHING PATTERN "*.h"
+  )
 

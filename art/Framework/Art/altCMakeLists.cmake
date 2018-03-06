@@ -86,8 +86,6 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
   )
 
 
-
-
 # Build an art exec.
 macro(art_exec TARGET_STEM IN_STEM MAIN_FUNC)
   cmake_parse_arguments(AE "" "" "LIBRARIES" ${ARGN})

@@ -19,7 +19,7 @@ target_link_libraries(art_Framework_IO_Catalog
     Boost::boost
     )
 
-  install(TARGETS art_Framework_IO_Catalog
+install(TARGETS art_Framework_IO_Catalog
   EXPORT ${PROJECT_NAME}Targets
   DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )

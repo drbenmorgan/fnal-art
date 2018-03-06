@@ -6,7 +6,19 @@ simple_plugin(FloatingPointControl "service"
 simple_plugin(ScheduleContext "service" art_Framework_Core)
 simple_plugin(TriggerNamesService "service")
 
-# NB: Install of services not trivial due to complex name created...
+install(TARGETS
+  art_Framework_Services_System_CurrentModule_service
+  art_Framework_Services_System_DatabaseConnection_service
+  art_Framework_Services_System_FileCatalogMetadata_service
+  art_Framework_Services_System_FloatingPointControl_service
+  art_Framework_Services_System_ScheduleContext_service
+  art_Framework_Services_System_TriggerNamesService_service
+  EXPORT ${PROJECT_NAME}Targets
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
 
-#install_headers(SUBDIRS detail)
-#install_source(SUBDIRS detail)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}/Framework/Services/System
+  FILES_MATCHING PATTERN "*.h"
+  )
+

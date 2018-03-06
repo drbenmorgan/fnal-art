@@ -49,11 +49,3 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
   FILES_MATCHING PATTERN "*.h"
   )
 
-
-#art_make_library(LIBRARY_NAME art_Framework_Services_Registry
-#  SOURCE ${art_Framework_Services_Registry_sources}
-#  LIBRARIES ${TBB}
-#  ${Boost_THREAD_LIBRARY}
-#  art_Utilities
-#  canvas)
-
