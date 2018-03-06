@@ -6,7 +6,7 @@ set(version "${PROJECT_VERSION}")
 string(REPLACE "." "_" version "${version}")
 
 # - Cetbuildtools, version2
-find_package(cetbuildtools2 0.4.0 REQUIRED)
+find_package(cetbuildtools2 0.5.0 REQUIRED)
 set(CMAKE_MODULE_PATH ${cetbuildtools2_MODULE_PATH})
 set(CET_COMPILER_CXX_STANDARD_MINIMUM 14)
 include(CetInstallDirs)
@@ -39,24 +39,30 @@ find_package(TBB REQUIRED)
 include(ArtDictionary)
 include(BuildPlugins)
 
+# TODO (check usage on Linux)
 #if (NOT APPLE)
 #  set(RT -lrt)
 #endif()
 
+# TODO
 # Plugin skeleton generators for cetskelgen.
 #add_subdirectory(perllib)
 
+# TODO: Review which are needed at install time
+#       and are they bin/libexec or something else
 # tools
 #add_subdirectory(tools)
 
 # source
 add_subdirectory(art)
 
+# TODO: Compatibility
 # ups - table and config files
 #add_subdirectory(ups)
 
 # CMake modules
-#add_subdirectory(Modules)
+add_subdirectory(Modules/AltCMake)
 
+# TODO
 # packaging utility
 #include(UseCPack)
