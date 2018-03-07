@@ -1,4 +1,8 @@
-# macros for building plugin libraries
+#.rst:
+# (Art)BuildPlugins
+# -----------------
+#
+# macros for building art plugins
 #
 # The plugin type is expected to be service, source, or module, but we
 # do not enforce this in order to allow for user- or experiment-defined
@@ -19,20 +23,27 @@
 # For other available options, please see
 # cetbuildtools/Modules/BasicPlugin.cmake
 # (https://cdcvs.fnal.gov/redmine/projects/cetbuildtools/repository/revisions/master/entry/Modules/BasicPlugin.cmake).
-########################################################################
+#
+
+# From cetbuildtools2
 include(BasicPlugin)
 
 cmake_policy(PUSH)
 cmake_policy(VERSION 3.3)
 
-macro (_sp_debug_message)
-  string(TOUPPER ${CMAKE_BUILD_TYPE} BTYPE_UC)
-  if (BTYPE_UC STREQUAL "DEBUG")
-    message(STATUS "SIMPLE_PLUGIN: " ${ARGN})
-  endif()
-endmacro()
+# When running in a build of Art, targets are not namespaced.
+# When used in client applications, they are.
+# Account for difference by checking for existence of
+# imported namespaced targets, and setting namespace
+# variable.
+if(TARGET art::art_Framework_Core)
+  set(_BP_ART_NAMESPACE "art::")
+endif()
 
-# simple plugin libraries
+
+# Wrapper over cetbuildtools2's basic_plugin to add
+# art specific types and linkage
+#
 function(simple_plugin name type)
   cmake_parse_arguments(SP "NOP" "" "SOURCE" ${ARGN})
   if(NOT simple_plugin_liblist)
@@ -40,9 +51,9 @@ function(simple_plugin name type)
   endif()
   if("${type}" STREQUAL "service")
     list(INSERT simple_plugin_liblist 0
-      art_Framework_Services_Registry
-      art_Persistency_Common
-      art_Utilities
+      ${_BP_ART_NAMESPACE}art_Framework_Services_Registry
+      ${_BP_ART_NAMESPACE}art_Persistency_Common
+      ${_BP_ART_NAMESPACE}art_Utilities
       canvas::canvas
       fhiclcpp::fhiclcpp
       cetlib::cetlib
@@ -52,11 +63,11 @@ function(simple_plugin name type)
       )
   elseif("${type}" STREQUAL "module" OR "${type}" STREQUAL "source")
     list(INSERT simple_plugin_liblist 0
-      art_Framework_Core
-      art_Framework_Principal
-      art_Persistency_Common
-      art_Persistency_Provenance
-      art_Utilities
+      ${_BP_ART_NAMESPACE}art_Framework_Core
+      ${_BP_ART_NAMESPACE}art_Framework_Principal
+      ${_BP_ART_NAMESPACE}art_Persistency_Common
+      ${_BP_ART_NAMESPACE}art_Persistency_Provenance
+      ${_BP_ART_NAMESPACE}art_Utilities
       canvas::canvas
       fhiclcpp::fhiclcpp
       cetlib::cetlib
@@ -67,7 +78,7 @@ function(simple_plugin name type)
       )
   elseif("${type}" STREQUAL "tool")
     list(INSERT simple_plugin_liblist 0
-      art_Utilities
+      ${_BP_ART_NAMESPACE}art_Utilities
       fhiclcpp::fhiclcpp
       cetlib::cetlib
       cetlib_except::cetlib_except
@@ -75,32 +86,15 @@ function(simple_plugin name type)
       Boost::system
       )
   endif()
+
+  # Source type also requires the IO_Sources subcomponent
   if ("${type}" STREQUAL "source")
     list(INSERT simple_plugin_liblist 0
-      art_Framework_IO_Sources
-      Boost::filesystem
-      Boost::system
+      ${_BP_ART_NAMESPACE}art_Framework_IO_Sources
       )
   endif()
-  #check_ups_version(cetbuildtools ${cetbuildtools_UPS_VERSION} v4_05_00 PRODUCT_MATCHES_VAR BP_HAS_SOURCE)
-  #if(SP_SOURCE)
-  #  if (BP_HAS_SOURCE)
-  #    list(INSERT SP_SOURCE 0 SOURCE)
-  #  else()
-  #    message(FATAL_ERROR "SOURCE option specified, but not supported by cetbuildtools ${CETBUILDTOOLS_VERSION}")
-  #  endif()
-  #endif()
-  #check_ups_version(cetbuildtools ${cetbuildtools_UPS_VERSION} v4_06_00 PRODUCT_MATCHES_VAR BP_HAS_NOP)
-  #if (BP_HAS_NOP AND NOT SP_NOP)
-    # Set it anyway so we have a good separator.
-    #  set(SP_NOP TRUE)
-    #elseif(SP_NOP AND NOT BP_HAS_NOP)
-    # Not a problem, it's already done its job.
-    #unset(SP_NOP)
-    #endif()
-    #if (SP_NOP)
-    #set (NOP_ARG NOP)
-    #endif()
+
+  # Forward to basic_plugin
   basic_plugin(${name} ${type} ${NOP_ARG} ${simple_plugin_liblist} ${ARGN} ${SP_SOURCE})
 endfunction()
 
