@@ -41,7 +41,7 @@ else()
   set(MemoryTrackerSource MemoryTrackerDarwin_service.cc)
 endif()
 
-basic_plugin(MemoryTracker "service"
+simple_plugin(MemoryTracker "service"
   art_Framework_Services_Optional
   canvas::canvas
   cetlib::cetlib
