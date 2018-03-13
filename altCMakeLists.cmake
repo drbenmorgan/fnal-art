@@ -18,7 +18,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Modules/AltCMake)
 
 #-----------------------------------------------------------------------
 # Dependencies
-find_package(canvas_root_io 1.4.2 REQUIRED)
+find_package(canvas_root_io 1.0.1 REQUIRED)
 find_package(canvas REQUIRED)
 find_package(messagefacility REQUIRED)
 find_package(fhiclcpp REQUIRED)
