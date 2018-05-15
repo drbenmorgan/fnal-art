@@ -20,8 +20,10 @@
 #include "cetlib/canonical_string.h"
 #include "cetlib/exempt_ptr.h"
 #include "cetlib_except/demangle.h"
+IGNORE_FALLTHROUGH_START
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
+IGNORE_FALLTHROUGH_END
 
 #include <utility>
 
@@ -67,7 +69,10 @@ art::OutputModule::configure(OutputModuleDescription const& desc)
 void
 art::OutputModule::doSelectProducts(ProductList const& productList)
 {
-  GroupSelector const groupSelector{groupSelectorRules_, productList};
+  // These variables cause problems for MT.  This function must be
+  // called in a single-threaded context.
+  groupSelector_ =
+    std::make_unique<GroupSelector const>(groupSelectorRules_, productList);
   keptProducts_ = {{}};
 
   // TODO: See if we can collapse keptProducts_ and groupSelector into
@@ -77,12 +82,10 @@ art::OutputModule::doSelectProducts(ProductList const& productList)
   for (auto const& val : productList) {
     BranchDescription const& pd = val.second;
     auto const bt = pd.branchType();
-    if (pd.transient()) {
-      // Transient, skip it.
+    if (pd.transient() || pd.dropped()) {
       continue;
     }
-    if (groupSelector.selected(pd)) {
-      // Selected, keep it.
+    if (selected(pd)) {
       keptProducts_[bt].push_back(&pd);
       continue;
     }

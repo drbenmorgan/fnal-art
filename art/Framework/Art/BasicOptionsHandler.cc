@@ -1,6 +1,7 @@
 #include "art/Framework/Art/BasicOptionsHandler.h"
 
 #include "art/Framework/Art/detail/AllowedConfiguration.h"
+#include "art/Framework/Art/detail/info_success.h"
 #include "art/Utilities/PluginSuffixes.h"
 #include "art/Version/GetReleaseVersion.h"
 #include "canvas/Utilities/Exception.h"
@@ -31,32 +32,42 @@ art::BasicOptionsHandler::BasicOptionsHandler(bpo::options_description& desc,
                                               cet::filepath_maker& maker)
   : help_desc_{desc}, maker_{maker}
 {
-  desc.add_options()("help,h", "produce help message")(
+  auto options = desc.add_options();
+  add_opt(options, "help,h", "produce help message");
+  add_opt(
+    options,
     "version",
     ("Print art version (" + pretty_version(art::getReleaseVersion()) + ")")
-      .c_str())("config,c", bpo::value<std::string>(), "Configuration file.")(
-    "process-name", bpo::value<std::string>(), "art process name.")(
+      .c_str());
+  add_opt(
+    options, "config,c", bpo::value<std::string>(), "Configuration file.");
+  add_opt(
+    options, "process-name", bpo::value<std::string>(), "art process name.");
+  add_opt(
+    options,
     "print-available",
     bpo::value<std::string>(),
     ("List all available plugins with the provided suffix.  Choose from:"s +
      Suffixes::print())
-      .c_str())(
-    "print-available-modules",
-    "List all available modules that can be invoked in a FHiCL file.")(
-    "print-available-services",
-    "List all available services that can be invoked in a FHiCL file.")(
-    "print-description",
-    bpo::value<std::vector<std::string>>()->multitoken(),
-    "Print description of specified module, service, source, or other plugin "
-    "(multiple OK)."
-    "  Argument can be a regular expression used to match the plugin "
-    "specification."
-    "  To narrow the search to plugins with a particular suffix, preface the "
-    "regular expression"
-    "with the suffix (e.g. service:TFileService).")(
-    "status-bar",
-    "Provide status bar that reports the progress of retrieving "
-    "plugin information for a 'print-available' command.");
+      .c_str());
+  add_opt(options,
+          "print-available-modules",
+          "List all available modules that can be invoked in a FHiCL file.");
+  add_opt(options,
+          "print-available-services",
+          "List all available services that can be invoked in a FHiCL file.");
+  add_opt(options,
+          "print-description",
+          bpo::value<std::vector<std::string>>()->multitoken(),
+          "Print description of specified module, service, source, or other "
+          "plugin (multiple OK).  Argument can be a regular expression used "
+          "to match the plugin specification.  To narrow the search to "
+          "plugins with a particular suffix, preface the regular expression"
+          "with the suffix (e.g. service:TFileService).");
+  add_opt(options,
+          "status-bar",
+          "Provide status bar that reports the progress of retrieving "
+          "plugin information for a 'print-available' command.");
 }
 
 int
@@ -73,21 +84,21 @@ art::BasicOptionsHandler::doCheckOptions(bpo::variables_map const& vm)
     for (std::string s; std::getline(ss, s);)
       std::cout << std::string(2, ' ') << s << '\n';
     std::cout << '\n';
-    return 1;
+    return detail::info_success();
   }
   bool const status_bar = vm.count("status-bar") > 0;
   if (vm.count("print-available")) {
     detail::print_available_plugins(
       Suffixes::get(vm["print-available"].as<std::string>()), status_bar);
-    return 1;
+    return detail::info_success();
   }
   if (vm.count("print-available-modules")) {
     detail::print_available_plugins(suffix_type::module, status_bar);
-    return 1;
+    return detail::info_success();
   }
   if (vm.count("print-available-services")) {
     detail::print_available_plugins(suffix_type::service, status_bar);
-    return 1;
+    return detail::info_success();
   }
   if (status_bar) {
     throw Exception(errors::Configuration)
@@ -98,11 +109,11 @@ art::BasicOptionsHandler::doCheckOptions(bpo::variables_map const& vm)
   if (vm.count("print-description")) {
     detail::print_descriptions(
       vm["print-description"].as<std::vector<std::string>>());
-    return 1;
+    return detail::info_success();
   }
   if (vm.count("version")) {
     std::cout << "art " << pretty_version(getReleaseVersion()) << '\n';
-    return 1;
+    return detail::info_success();
   }
 
   if (!vm.count("config")) {

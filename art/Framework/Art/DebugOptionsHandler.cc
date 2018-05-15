@@ -15,46 +15,83 @@ using namespace std::string_literals;
 using art::detail::fhicl_key;
 using table_t = fhicl::extended_value::table_t;
 
+namespace {
+  std::pair<std::string, bool>
+  destination_via_env()
+  {
+    char const* debug_config{getenv("ART_DEBUG_CONFIG")};
+    if (debug_config == nullptr)
+      return std::make_pair("", false);
+
+    try {
+      // Check if the provided character string is a file name
+      std::string fn;
+      if (std::regex_match(debug_config, std::regex("[[:alpha:]/\\.].*"))) {
+        fn = debug_config;
+      }
+      std::cerr << "** ART_DEBUG_CONFIG is defined **\n";
+      return std::make_pair(fn, true);
+    }
+    catch (std::regex_error const& e) {
+      std::cerr << "REGEX ERROR: " << e.code() << ".\n";
+    }
+    return std::make_pair("", false);
+  }
+}
+
 art::DebugOptionsHandler::DebugOptionsHandler(bpo::options_description& desc,
-                                              std::string const& basename,
-                                              detail::DebugOutput& dbg)
-  : dbg_{dbg}
+                                              std::string const& basename)
 {
   bpo::options_description debug_options{"Debugging options"};
-  debug_options.add_options()("mt-diagnostics,M",
-                              bpo::value<std::string>(),
-                              "Log art-specific multi-threading diagnostics to "
-                              "the provided destination.")(
-    "trace", "Activate tracing.")("notrace", "Deactivate tracing.")(
-    "timing", "Activate monitoring of time spent per event/module.")(
-    "timing-db",
-    bpo::value<std::string>(),
-    "Output time-tracking data to SQLite3 database with name <db-file>.")(
-    "notiming", "Deactivate time tracking.")(
-    "memcheck",
-    "Activate monitoring of memory use (deprecated--per-job memory information "
-    "printed in job summary).")(
-    "memcheck-db",
-    bpo::value<std::string>(),
-    "Output memory use data to SQLite3 database with name <db-file>.")(
-    "nomemcheck", "Deactivate monitoring of memory use.")(
+  auto options = debug_options.add_options();
+  add_opt(options,
+          "mt-diagnostics,M",
+          bpo::value<std::string>(),
+          "Log art-specific multi-threading diagnostics to "
+          "the provided destination.");
+  add_opt(options, "trace", "Activate tracing.");
+  add_opt(options, "notrace", "Deactivate tracing.");
+  add_opt(
+    options, "timing", "Activate monitoring of time spent per event/module.");
+  add_opt(options,
+          "timing-db",
+          bpo::value<std::string>(),
+          "Output time-tracking data to SQLite3 database with name <db-file>.");
+  add_opt(options, "notiming", "Deactivate time tracking.");
+  add_opt(options,
+          "memcheck",
+          "Activate monitoring of memory use (deprecated--per-job "
+          "memory information printed in job summary).");
+  add_opt(options,
+          "memcheck-db",
+          bpo::value<std::string>(),
+          "Output memory use data to SQLite3 database with name <db-file>.");
+  add_opt(options, "nomemcheck", "Deactivate monitoring of memory use.");
+  add_opt(
+    options,
     "validate-config",
     bpo::value<std::string>(),
     "Output post-processed configuration to <file>; call constructors of all "
     "sources, modules and services, performing extra configuration "
-    "verification.  Exit just before processing the event loop.")(
+    "verification.  Exit just before processing the event loop.");
+  add_opt(
+    options,
     "debug-config",
     bpo::value<std::string>(),
     ("Output post-processed configuration to <file> and exit. Equivalent to env ART_DEBUG_CONFIG=<file> "s +
      basename + " ...")
-      .c_str())(
+      .c_str());
+  add_opt(
+    options,
     "config-out",
     bpo::value<std::string>(),
-    "Output post-processed configuration to <file> and continue with job.")(
-    "annotate", "Include configuration parameter source information.")(
-    "prefix-annotate",
-    "Include configuration parameter source information on line preceding "
-    "parameter declaration.");
+    "Output post-processed configuration to <file> and continue with job.");
+  add_opt(
+    options, "annotate", "Include configuration parameter source information.");
+  add_opt(options,
+          "prefix-annotate",
+          "Include configuration parameter source information "
+          "on line preceding parameter declaration.");
   desc.add(debug_options);
 }
 
@@ -109,43 +146,45 @@ art::DebugOptionsHandler::doProcessOptions(
   fhicl::intermediate_table& raw_config)
 {
 
-  using detail::DebugOutput;
-  using dest_t = DebugOutput::destination;
-
-  std::string fn;
-  switch (DebugOutput::destination_via_env(fn)) {
-    case dest_t::cerr:
-      dbg_.to_cerr();
-      dbg_.set_processing_mode(DebugOutput::processing_mode::debug_config);
-      break;
-    case dest_t::file:
-      dbg_.set_filename(fn);
-      dbg_.set_processing_mode(DebugOutput::processing_mode::debug_config);
-      break;
-    case dest_t::none: {
-    }
-  }
-
-  // "debug-config" wins over ART_DEBUG_CONFIG
-  if (vm.count("validate-config")) {
-    dbg_.set_filename(vm["validate-config"].as<std::string>());
-    dbg_.set_processing_mode(DebugOutput::processing_mode::validate_config);
-  } else if (vm.count("debug-config")) {
-    dbg_.set_filename(vm["debug-config"].as<std::string>());
-    dbg_.set_processing_mode(DebugOutput::processing_mode::debug_config);
-  } else if (vm.count("config-out")) {
-    auto fn = vm["config-out"].as<std::string>();
-    raw_config.put("services.scheduler.configOut", fn);
-    dbg_.set_filename(fn);
-    dbg_.set_processing_mode(DebugOutput::processing_mode::config_out);
-  }
   using namespace fhicl::detail;
+
+  auto const scheduler_key = fhicl_key("services", "scheduler");
+  std::string debug_table;
+
+  // Get ART_DEBUG_CONFIG value
+  std::string fn;
+  auto const result = destination_via_env();
+  if (result.second) {
+    debug_table = fhicl_key(scheduler_key, "debugConfig");
+    fn = result.first;
+  }
+
+  // "validate-config" and "debug-config" win over ART_DEBUG_CONFIG
+  if (vm.count("validate-config")) {
+    debug_table = fhicl_key(scheduler_key, "validateConfig");
+    fn = vm["validate-config"].as<std::string>();
+  } else if (vm.count("debug-config")) {
+    debug_table = fhicl_key(scheduler_key, "debugConfig");
+    fn = vm["debug-config"].as<std::string>();
+  } else if (vm.count("config-out")) {
+    debug_table = fhicl_key(scheduler_key, "configOut");
+    fn = vm["config-out"].as<std::string>();
+  }
+  if (!debug_table.empty()) {
+    raw_config.put(fhicl_key(debug_table, "fileName"), fn);
+  }
+
+  std::string mode{"raw"};
   if (vm.count("annotate")) {
-    dbg_.set_print_mode(print_mode::annotated);
+    mode = "annotate";
   }
   if (vm.count("prefix-annotate")) {
-    dbg_.set_print_mode(print_mode::prefix_annotated);
+    mode = "prefix-annotate";
   }
+  if (!debug_table.empty()) {
+    raw_config.put(fhicl_key(debug_table, "printMode"), mode);
+  }
+
   if (vm.count("trace")) {
     raw_config.put("services.scheduler.wantTracer", true);
   } else if (vm.count("notrace")) {

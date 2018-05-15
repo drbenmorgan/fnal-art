@@ -30,8 +30,8 @@
 #include "canvas/Persistency/Provenance/TypeLabel.h"
 #include "canvas/Utilities/Exception.h"
 #include "canvas/Utilities/TypeID.h"
-#include "cetlib/exception.h"
 #include "cetlib/exempt_ptr.h"
+#include "cetlib_except/exception.h"
 
 #include <memory>
 #include <set>
@@ -89,7 +89,7 @@ public:
   }
 
   void registerProducts(MasterProductRegistry& mpr,
-                        ProductDescriptions& producedProducts,
+                        ProductDescriptions& productsToRegister,
                         ModuleDescription const& md);
 
   // Record the production of an object of type P, with optional

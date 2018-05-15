@@ -31,9 +31,14 @@ services: {
       }
    }
    scheduler: {
+      debugConfig: {
+         fileName: "config.out"
+         printMode: "raw"
+      }
       errorOnFailureToPut: true
       errorOnMissingConsumes: false
       errorOnSIGINT: true
+      num_threads: 1
    }
 }
 source: {

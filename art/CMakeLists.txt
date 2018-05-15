@@ -5,6 +5,7 @@ if(ALT_CMAKE)
 endif()
 
 include(ArtMake)
+include(CetMakeCompletions)
 
 # cmake will automatically order the library builds according to declared dependencies
 add_subdirectory (Version)

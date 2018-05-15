@@ -34,6 +34,7 @@
 #include "canvas/Utilities/FriendlyName.h"
 #include "canvas_root_io/Streamers/ProductIDStreamer.h"
 #include "canvas_root_io/Utilities/DictionaryChecker.h"
+#include "cetlib/compiler_macros.h"
 #include "cetlib/container_algorithms.h"
 #include "fhiclcpp/ParameterSet.h"
 #include "fhiclcpp/ParameterSetID.h"
@@ -75,6 +76,7 @@ namespace {
       switch (rc = sqlite3_step(stmt)) {
         case SQLITE_ROW:
           result = true; // Found the table.
+          FALLTHROUGH;
         case SQLITE_DONE:
           rc = SQLITE_OK; // No such table.
           break;
@@ -296,9 +298,7 @@ namespace art {
     auto& prodList = productListHolder_.productList_;
     dropOnInput(groupSelectorRules, dropDescendants, prodList);
 
-    mpr.updateFromInputFile(prodList);
     auto availableProducts = fillPerBranchTypePresenceFlags(prodList);
-
     // Add branches
     for (auto& prod : prodList) {
       auto& pd = prod.second;
@@ -311,6 +311,8 @@ namespace art {
       pd.setValidity(validity);
       treePointers_[pd.branchType()]->addBranch(prod.first, pd);
     }
+
+    mpr.updateFromInputFile(prodList);
     auto const& descriptions = make_product_descriptions(prodList);
     presentProducts_ = ProductTables{descriptions, availableProducts};
 
