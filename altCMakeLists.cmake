@@ -1,6 +1,6 @@
 # - Toplevel CMake script for fnal::art
 cmake_minimum_required(VERSION 3.3)
-project(art VERSION 2.10.1)
+project(art VERSION 2.11.0)
 # Normalize version to UPS style
 set(version "${PROJECT_VERSION}")
 string(REPLACE "." "_" version "${version}")

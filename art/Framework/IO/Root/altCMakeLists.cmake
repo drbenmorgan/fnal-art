@@ -85,6 +85,8 @@ add_library(art_Framework_IO_Root SHARED
   RootDelayedReader.cc
   RootDelayedReader.h
   RootFileBlock.h
+  RootHandlers.h
+  RootHandlers.cc
   RootInput.h
   RootInputFile.cc
   RootInputFile.h

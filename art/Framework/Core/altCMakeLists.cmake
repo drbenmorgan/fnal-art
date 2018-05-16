@@ -54,6 +54,7 @@ add_library(art_Framework_Core SHARED
   PathsInfo.cc
   PathsInfo.h
   ProducerBase.h
+  ProducerTable.h
   ProducingService.cc
   ProducingService.h
   ProducingServiceSignals.h
@@ -74,7 +75,7 @@ add_library(art_Framework_Core SHARED
   WorkerInPath.h
   WorkerMap.h
   WorkerT.h
-  detail/IgnoreModuleLabel.h
+  detail/ImplicitConfigs.h
   detail/ModuleConfigInfo.cc
   detail/ModuleConfigInfo.h
   detail/ModuleFactory.cc
