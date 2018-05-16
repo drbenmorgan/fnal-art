@@ -48,6 +48,8 @@ if(ALT_CMAKE)
   # Internal dynamic loader path.
   # Need both internal path, and that for MF for its plugins.
   cet_test_env("CETD_LIBRARY_PATH=$<TARGET_FILE_DIR:art_Framework_Art>:$<TARGET_FILE_DIR:messagefacility::MF_MessageLogger>:$ENV{CETD_LIBRARY_PATH}")
+  # We set MF_PLUGIN_PATH separately in case
+  cet_test_env("MF_PLUGIN_PATH=$<TARGET_FILE_DIR:art_Framework_Art>:$<TARGET_FILE_DIR:messagefacility::MF_MessageLogger>")
 
   # Ensure we find programs that are only given as names, not full paths
   cet_test_env("PATH=$<TARGET_FILE_DIR:art>:${PROJECT_SOURCE_DIR}/tools:$ENV{PATH}")
